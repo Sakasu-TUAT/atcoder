@@ -33,32 +33,17 @@ void in(Head&& head, Tail&&... tail) {
 
 int main(){
     int n; cin >> n;
-    vector<int> p(n), a(n);
+    vector<int> a(n), b(n);
+    rep(i,0,n-1) cin >> a[i];  
+    rep(i,0,n-1) cin >> b[i];  
+    vector<int> dp(n+1, -1e6); //-で初期化することに注意
+    dp[1] = 0;
     rep(i,0,n){
-        cin >> p[i] >> a[i];
-    }    
-    vector<vector<int>> dp(n+1, vector<int>(n+1));
-
-    dp[0][n] = 0;
-
-    rep(l,1,n+1){
-        for(int r=n; r>l; r--){
-            chmax(dp[l+1][r], (l<=p[l-1] and p[l-1]<=r ? dp[l][r] + a[l-1] : dp[l][r]) );
-            chmax(dp[l][r-1], (l<=p[r-1] and p[r-1]<=r ? dp[l][r] + a[r-1] : dp[l][r]) );
-        }
+        chmax(dp[a[i]], dp[i+1] + 100);
+        chmax(dp[b[i]], dp[i+1] + 150);
     }
+    cout << dp[n] << endl;  
 
-    int ans = 0;
-    rep(i,0,n+1){
-        chmax(ans, dp[i][i]);
-    }
-    cout << ans << endl;
-    // for(const auto v : dp){
-    //     for(const auto e : v){
-    //         cerr << e << " ";
-    //     }cerr << endl;
-    // }
-    
-
+    return 0;
 }
 

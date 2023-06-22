@@ -31,34 +31,29 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 
+const int INF = 1e9;
+
 int main(){
-    int n; cin >> n;
-    vector<int> p(n), a(n);
-    rep(i,0,n){
-        cin >> p[i] >> a[i];
-    }    
-    vector<vector<int>> dp(n+1, vector<int>(n+1));
+    int n, m; cin >> n >> m;
+    vector<vector<int>> a(m, vector<int> (n));
+    vector<vector<int>> dp(m+1, vector<int> (1<<n+1, INF));
 
-    dp[0][n] = 0;
+    rep(i,0,m) rep(j,0,n) cin >> a[i][j];
+    dp[0][0] = 0;
 
-    rep(l,1,n+1){
-        for(int r=n; r>l; r--){
-            chmax(dp[l+1][r], (l<=p[l-1] and p[l-1]<=r ? dp[l][r] + a[l-1] : dp[l][r]) );
-            chmax(dp[l][r-1], (l<=p[r-1] and p[r-1]<=r ? dp[l][r] + a[r-1] : dp[l][r]) );
+    rep(i,1,m+1){
+        rep(j,1,1<<n+1){
+           chmin(dp[i][j-1], dp[i-1][j-1]);
+           int tmp = j-1;
+           rep(k,1,n+1){
+                if(a[i-1][k-1]) tmp |= (1<<(k-1));
+           }
+            chmin(dp[i][tmp], dp[i-1][j-1] + 1);
         }
     }
 
-    int ans = 0;
-    rep(i,0,n+1){
-        chmax(ans, dp[i][i]);
-    }
-    cout << ans << endl;
-    // for(const auto v : dp){
-    //     for(const auto e : v){
-    //         cerr << e << " ";
-    //     }cerr << endl;
-    // }
-    
+    cout << (dp[m][(1<<n)-1] != INF ? dp[m][(1<<n)-1] : -1) << endl;  
 
+    return 0;
 }
 

@@ -31,34 +31,39 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 
+const int INF = 1e9;
+
+
+template<class T>
+T BinarySearch(const vector<T> &a, T target){
+    T ok = a.size()+1;
+    T ng = -1;
+    T mid;
+    while(abs(ok-ng)>1){
+        mid = (ok + ng)/2;
+        if(a[mid] >= target) ok = mid;
+        else ng = mid;
+    }
+    return ok;
+}
+
 int main(){
     int n; cin >> n;
-    vector<int> p(n), a(n);
+    vector<int> a(n);
     rep(i,0,n){
-        cin >> p[i] >> a[i];
-    }    
-    vector<vector<int>> dp(n+1, vector<int>(n+1));
-
-    dp[0][n] = 0;
-
-    rep(l,1,n+1){
-        for(int r=n; r>l; r--){
-            chmax(dp[l+1][r], (l<=p[l-1] and p[l-1]<=r ? dp[l][r] + a[l-1] : dp[l][r]) );
-            chmax(dp[l][r-1], (l<=p[r-1] and p[r-1]<=r ? dp[l][r] + a[r-1] : dp[l][r]) );
-        }
+        cin >> a[i];
+    }   
+    vector<int> dp(n+1), l(n+1);
+    int len = 0;
+    rep(i,0,n){
+        int pos = lower_bound(l.begin()+1, l.begin()+1+len, a[i]) - l.begin();
+        l[pos] = a[i];
+        dp[i] = pos;
+        if(pos>len)  len++;
     }
+    cout << len << endl;
 
-    int ans = 0;
-    rep(i,0,n+1){
-        chmax(ans, dp[i][i]);
-    }
-    cout << ans << endl;
-    // for(const auto v : dp){
-    //     for(const auto e : v){
-    //         cerr << e << " ";
-    //     }cerr << endl;
-    // }
-    
 
+    return 0;
 }
 
