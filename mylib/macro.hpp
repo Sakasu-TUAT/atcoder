@@ -203,3 +203,24 @@ vector<long long> dijkstra(vector<vector<pair<int, T>>>& graph, int start) {
 }  // namespace useful
 using namespace useful;
 
+
+template <typename F>
+struct FixPoint : F {
+  template <typename G>
+  FixPoint(G&& g)
+    : F{std::forward<G>(g)}
+  {}
+  template <typename... Args>
+  decltype(auto)
+  operator()(Args&&... args) const {
+    return F::operator()(*this, std::forward<Args>(args)...);
+  }
+};
+
+template <typename F>
+inline FixPoint<std::decay_t<F>>
+fix(F&& f) {
+  return std::forward<std::decay_t<F>>(f);
+}
+
+
