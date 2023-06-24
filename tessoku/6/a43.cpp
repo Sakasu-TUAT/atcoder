@@ -34,26 +34,18 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 
-
 const ll INF = 1e9;
 const ll mod = 1000000007;
 
 int main(){
-    int n;  cin >> n;
-    map<ll, ll> mp;
-
+    ll n, l; cin >> n >> l;
+    vector<ll> a(n), b(n);
     rep(i,0,n){
-        ll x; cin >> x;
-        mp[x]++;
+        cin >> a[i] >> b[i];
     }
     
-    ll ans = 0;
-    for(const auto &[key, value] : mp){
-        if(value >= 3){
-            ans += (value*(value-1)*(value-2)/6);
-        }
-    }
-    cout << ans << endl;
+
+    
 
     return 0;
 }

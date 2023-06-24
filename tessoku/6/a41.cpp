@@ -40,21 +40,15 @@ const ll mod = 1000000007;
 
 int main(){
     int n;  cin >> n;
-    map<ll, ll> mp;
+    string s; cin >> s;
 
-    rep(i,0,n){
-        ll x; cin >> x;
-        mp[x]++;
-    }
-    
-    ll ans = 0;
-    for(const auto &[key, value] : mp){
-        if(value >= 3){
-            ans += (value*(value-1)*(value-2)/6);
+    rep(i,0,n-2){
+        if(s[i] == s[i+1] and s[i] == s[i+2]){
+            cout << "Yes" << endl;
+            return 0;        
         }
     }
-    cout << ans << endl;
-
+    cout << "No" << endl;
     return 0;
 }
 

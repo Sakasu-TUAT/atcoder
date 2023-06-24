@@ -39,18 +39,19 @@ const ll INF = 1e9;
 const ll mod = 1000000007;
 
 int main(){
-    int n;  cin >> n;
-    map<ll, ll> mp;
-
+    int n, k; cin >> n >> k;
+    vector<ll> a(n), b(n);
     rep(i,0,n){
-        ll x; cin >> x;
-        mp[x]++;
+        cin >> a[i] >> b[i];
     }
-    
     ll ans = 0;
-    for(const auto &[key, value] : mp){
-        if(value >= 3){
-            ans += (value*(value-1)*(value-2)/6);
+    for(ll x : a){
+        for(ll y : b){
+            ll cnt = 0;
+            rep(i,0,n){
+                if(x <= a[i] and a[i] <= x+k and y<=b[i] and b[i]<= y+k) cnt++;
+            }
+            chmax(ans, cnt);
         }
     }
     cout << ans << endl;
