@@ -38,17 +38,23 @@ const ll INF = 1e9;
 const ll mod = 1000000007;
 
 int main(){
-    ll n, l; cin >> n >> l;
-    map<char, ll> mp;
+    int n; char c; cin >> n >> c;
+    int ans = 0;
     rep(i,0,n){
-        int a; char b; cin >> a >> b;
-        if(b=='E'){
-            chmax(mp[b], l-a);
-        } else {
-            chmax(mp[b], a);
-        }
-    }    
-    cout << max(mp['E'], mp['W']) << endl;
+        char s; cin >> s;
+        if(s=='W') ans+=0;
+        if(s=='B') ans+=1;
+        if(s=='R') ans+=2;
+    }
+    int moduler = ans%3;
+    if(
+        (c=='W' and moduler == 0) or
+        (c=='B' and moduler == 1) or
+        (c=='R' and moduler == 2) 
+    ) cout << "Yes" << endl;
+    else {
+        cout << "No" << endl;
+    }
 
     return 0;
 }

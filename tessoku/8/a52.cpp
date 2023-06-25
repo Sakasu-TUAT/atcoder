@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
+#include <stack>
 using namespace std;
 using ll = long long;
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
@@ -34,21 +35,26 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 
+
 const ll INF = 1e9;
 const ll mod = 1000000007;
 
 int main(){
-    ll n, l; cin >> n >> l;
-    map<char, ll> mp;
-    rep(i,0,n){
-        int a; char b; cin >> a >> b;
-        if(b=='E'){
-            chmax(mp[b], l-a);
+    int q; cin >> q;
+    queue<string> que;
+    while(q--){
+        int x; cin >> x;
+        if(x==1){
+            string s; cin >> s;
+            que.push(s);
+        } else if(x==2){
+            auto name = que.front();
+            cout << name << endl;
         } else {
-            chmax(mp[b], a);
+            que.pop();
         }
-    }    
-    cout << max(mp['E'], mp['W']) << endl;
+    }
+   
 
     return 0;
 }

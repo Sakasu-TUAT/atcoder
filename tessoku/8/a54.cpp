@@ -10,13 +10,15 @@
 #include <cmath>
 #include <iomanip>
 #include <limits>
-#include <deque>
 #include <set>
+#include <deque>
+#include <stack>
 #include <queue>
 #include <unordered_map>
 #include <algorithm>
 #include <bitset>
 #include <cassert>
+
 using namespace std;
 using ll = long long;
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
@@ -34,21 +36,25 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 
+
 const ll INF = 1e9;
 const ll mod = 1000000007;
 
 int main(){
-    ll n, l; cin >> n >> l;
-    map<char, ll> mp;
-    rep(i,0,n){
-        int a; char b; cin >> a >> b;
-        if(b=='E'){
-            chmax(mp[b], l-a);
-        } else {
-            chmax(mp[b], a);
+    int q; cin >> q;
+    map<string, int> mp;
+    while(q--){
+        int x; cin >> x;
+        if(x==1){
+            string s; cin >> s;
+            int a; cin >> a;
+            mp[s] = a;
+        } else if(x==2){
+            string s; cin >> s;
+            cout << mp[s] << endl;
         }
-    }    
-    cout << max(mp['E'], mp['W']) << endl;
+    }
+   
 
     return 0;
 }

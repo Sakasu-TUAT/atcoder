@@ -38,18 +38,28 @@ const ll INF = 1e9;
 const ll mod = 1000000007;
 
 int main(){
-    ll n, l; cin >> n >> l;
-    map<char, ll> mp;
-    rep(i,0,n){
-        int a; char b; cin >> a >> b;
-        if(b=='E'){
-            chmax(mp[b], l-a);
+    ll n, q;
+    cin >> n >> q;
+    vector<ll> a(n);
+    rep(i,0,n){a[i] = i+1;}
+    bool isReversed = false;
+    while(q--){
+        ll b; cin >> b;
+        if(b==1){
+            ll x, y; cin >> x >> y;
+            if(isReversed){
+                a[n-x] = y;
+            } else {
+                a[x-1] = y;
+            }
+        } else if(b==2){
+            isReversed = !isReversed; 
         } else {
-            chmax(mp[b], a);
+            ll x; cin >> x;
+            if(isReversed) cout << a[n-x] << endl;
+            else cout << a[x-1] << endl;
         }
-    }    
-    cout << max(mp['E'], mp['W']) << endl;
-
+    }
     return 0;
 }
 

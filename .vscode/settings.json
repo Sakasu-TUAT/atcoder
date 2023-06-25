@@ -6,6 +6,13 @@
         "iostream": "cpp",
         "*.tcc": "cpp",
         "deque": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "array": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "string_view": "cpp",
+        "span": "cpp",
+        "typeindex": "cpp",
+        "typeinfo": "cpp"
     }
 }
