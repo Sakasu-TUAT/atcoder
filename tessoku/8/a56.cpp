@@ -38,27 +38,41 @@ void in(Head&& head, Tail&&... tail) {
 
 
 const ll INF = 1e9;
-const ll mod = 1000000007;
+// const ll mod = 1000000007;
 
-int main(){
-    int n, q; cin >> n >> q;
-    string s; cin >> s;
+long long mod = 2147483647;
+long long T[200010], H[200010];
+long long Power100[200010];
 
-    // while(q--){
-    //     int x; cin >> x;
-    //     if(x==1){
-    //         int a; cin >> a;
-    //         st.insert(a);
-    //     } else if(x==2){
-    //         int a; cin >> a;
-    //         st.erase(a);
-    //     } else {
-    //         int a; cin >> a;
-    //         auto itr = st.lower_bound(a); 
-    //         cout << (itr == st.end() ? -1 : *itr) << endl;
-    //     }
-    // }
-   
+long long Hash_value(int l, int r) {
+  long long val = H[r] - (H[l-1] * Power100[r-l+1] % mod);
+  if(val < 0) val += mod;
+  return val;
+}
+
+int main() {
+  long long N, Q;
+  cin >> N >> Q;
+  string S;
+  cin >> S;
+  long long a[Q+1], b[Q+1], c[Q+1], d[Q+1];
+  for(int i = 1; i <= Q; i++) {
+    cin >> a[i] >> b[i] >> c[i] >> d[i];
+  }
+  for(int i = 1; i <= N; i++) T[i] = (S[i-1] - '0') + 1;
+
+  Power100[0] = 1;
+  for(int i = 1; i <= N; i++) Power100[i] = 100LL * Power100[i-1] % mod;
+
+  H[0] = 0;
+  for(int i = 1; i <= N; i++) H[i] = (100LL * H[i-1]  + T[i]) % mod;
+
+  for(int i = 1; i <= Q; i++) {
+    long long hash1 = Hash_value(a[i], b[i]);
+    long long hash2 = Hash_value(c[i], d[i]);
+    if(hash1 == hash2) cout << "Yes" << endl;
+    else cout << "No" << endl;
+  }
 
     return 0;
 }
