@@ -16,6 +16,7 @@
 
 using namespace std;
 using ll = long long;
+using P = pair<ll, ll>;
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
 
@@ -45,44 +46,28 @@ void printBit(T a){
 }
 
 int main(){
-  int h,w,K; cin>>h>>w>>K;
-  vector<string> tb(h*w+1);
-  int originSum = 0;
-  rep(i,0,h){
-    cin >> tb[i];
-    rep(j,0,w){
-      if(tb[i][j] == '#') originSum++;
-    }
+  int n, w, l, r; 
+  cin >> n >> w >> l >> r;
+  int lpos, rpos;
+  vector<int> x(n+2);
+  x[0] = 0;
+  x[n+1] = w;
+  rep(i,0,n) cin >> x[i+1];
+  vector<int> dp(n+2), s(n+2);
+  dp[0] = 1;
+  s[0] = 1;
+  rep(i,1,n+2){
+      lpos = lower_bound(x.begin(), x.end(), x[i]-r)-x.begin();
+      rpos = lower_bound(x.begin(), x.end(), x[i]-l+1)-x.begin();
+      rpos--;
+      if(rpos==-1) dp[i]=0;
+      else dp[i] = s[rpos];
+      if(lpos >= 1)dp[i] -= s[lpos-1];
+      dp[i] = (dp[i]+mod)%mod;
+      s[i] = s[i-1]+dp[i];
+      s[i] %= mod;
   }
-  int ans = 0;
-  //行の選択をビット全探索
-  rep(i,0,1<<h){
-    set<int> st;
-    int rowSum = 0;
-    rep(j,0,h){
-      if(i & (1<<j)) {
-        st.insert(j); //塗った行を取得
-        rep(k,0,w){
-          if(tb[j][k] == '.') rowSum++;
-        }
-      }
-    }
-    if(st.size() > K) continue;
-    vector<int> col(w);
-    rep(j,0,w){
-      rep(k,0,h){
-        if(st.count(k)) continue; //既に塗られている場合は無視
-        if(tb[k][j] == '.') col[j]++;
-      }
-    }
-    sort(col.rbegin(), col.rend());
-    int colSum = 0;
-    rep(j,0,K-st.size()){
-      colSum += col[j];
-    } 
-    cerr << rowSum << " + " << colSum << endl;
-    chmax(ans, rowSum+colSum);
-  }
-  cout << originSum + ans << endl;
+  cout << dp[n+1] << endl;
+
   return 0;
 }

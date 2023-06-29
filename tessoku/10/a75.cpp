@@ -16,6 +16,7 @@
 
 using namespace std;
 using ll = long long;
+using P = pair<ll, ll>;
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
 
@@ -45,44 +46,26 @@ void printBit(T a){
 }
 
 int main(){
-  int h,w,K; cin>>h>>w>>K;
-  vector<string> tb(h*w+1);
-  int originSum = 0;
-  rep(i,0,h){
-    cin >> tb[i];
-    rep(j,0,w){
-      if(tb[i][j] == '#') originSum++;
+  int n; cin >> n;
+  vector<P> v;
+  rep(i,0,n){
+    int t, d; cin >> t >> d;
+    v.emplace_back(d, t);
+  }
+  sort(v.begin(), v.end());
+  vector<vector<int>> dp(n+1, vector<int>(1440+9));
+  dp[0][0] = 0;
+  rep(i,0,n){
+    auto [d, t] = v[i];
+    for(int j=0; j<=1440; j++){
+      chmax(dp[i+1][j], dp[i][j]);
+      if(j+t <= d) chmax(dp[i+1][j+t], dp[i][j] + 1);
     }
   }
-  int ans = 0;
-  //行の選択をビット全探索
-  rep(i,0,1<<h){
-    set<int> st;
-    int rowSum = 0;
-    rep(j,0,h){
-      if(i & (1<<j)) {
-        st.insert(j); //塗った行を取得
-        rep(k,0,w){
-          if(tb[j][k] == '.') rowSum++;
-        }
-      }
-    }
-    if(st.size() > K) continue;
-    vector<int> col(w);
-    rep(j,0,w){
-      rep(k,0,h){
-        if(st.count(k)) continue; //既に塗られている場合は無視
-        if(tb[k][j] == '.') col[j]++;
-      }
-    }
-    sort(col.rbegin(), col.rend());
-    int colSum = 0;
-    rep(j,0,K-st.size()){
-      colSum += col[j];
-    } 
-    cerr << rowSum << " + " << colSum << endl;
-    chmax(ans, rowSum+colSum);
+  ll ans = 0;
+  rep(i,0,1441){
+    chmax(ans, dp[n][i]);
   }
-  cout << originSum + ans << endl;
-  return 0;
+
+  cout << ans <<  endl;
 }

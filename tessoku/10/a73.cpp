@@ -16,6 +16,7 @@
 
 using namespace std;
 using ll = long long;
+using P = pair<ll, ll>;
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
 
@@ -45,44 +46,38 @@ void printBit(T a){
 }
 
 int main(){
-  int h,w,K; cin>>h>>w>>K;
-  vector<string> tb(h*w+1);
-  int originSum = 0;
-  rep(i,0,h){
-    cin >> tb[i];
-    rep(j,0,w){
-      if(tb[i][j] == '#') originSum++;
+  int n, m; cin >> n >> m;
+  vector<vector<P>> graph(n);
+  priority_queue<P, vector<P>, greater<P>> pq;
+  rep(i,0,m){
+    int a, b, c, d;
+    cin >> a >> b >> c >> d;
+    a--; b--;
+    if(d==1){
+      graph[a].emplace_back(b, 10000*c - 1);
+      graph[b].emplace_back(a, 10000*c - 1);
+    } else {
+      graph[a].emplace_back(b, c*10000);
+      graph[b].emplace_back(a, c*10000);
     }
   }
-  int ans = 0;
-  //行の選択をビット全探索
-  rep(i,0,1<<h){
-    set<int> st;
-    int rowSum = 0;
-    rep(j,0,h){
-      if(i & (1<<j)) {
-        st.insert(j); //塗った行を取得
-        rep(k,0,w){
-          if(tb[j][k] == '.') rowSum++;
-        }
-      }
+  vector<ll> dist(n, INF);
+  dist[0] = 0;
+  pq.push({0LL,0});
+  vector<bool> used(n);
+  while(!pq.empty()){
+    auto [nowDist, nowPos] = pq.top();  pq.pop();
+    if(used[nowPos]) continue;
+    used[nowPos] = true;
+    for(const auto &[nextPos, nextDist] : graph[nowPos]){
+     if(dist[nextPos] > dist[nowPos] + nextDist){
+      dist[nextPos] = dist[nowPos]+nextDist;
+      pq.push({dist[nextPos], nextPos});
+     }
     }
-    if(st.size() > K) continue;
-    vector<int> col(w);
-    rep(j,0,w){
-      rep(k,0,h){
-        if(st.count(k)) continue; //既に塗られている場合は無視
-        if(tb[k][j] == '.') col[j]++;
-      }
-    }
-    sort(col.rbegin(), col.rend());
-    int colSum = 0;
-    rep(j,0,K-st.size()){
-      colSum += col[j];
-    } 
-    cerr << rowSum << " + " << colSum << endl;
-    chmax(ans, rowSum+colSum);
   }
-  cout << originSum + ans << endl;
-  return 0;
+  ll disance = (dist[n-1] + 9999) / 10000;
+  ll numTree = disance * 10000 - dist[n-1];
+  cout << disance << " " << numTree << endl;
+
 }
