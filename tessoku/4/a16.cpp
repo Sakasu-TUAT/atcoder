@@ -34,19 +34,26 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 
-int main(){
-    int n;
-    cin >> n;
-    vector<ll> a(n-1), b(n-2);
-    rep(i,0,n-1) cin >> a[i];
-    rep(i,0,n-2) cin >> b[i];
+const ll INF = 1e9;
 
-    vector<ll> dp(n, 1e7);
+int main(){
+    int n; cin >> n;
+    vector<int> dp(n+1, INF), a(n+1), b(n+1);
+    rep(i,2,n+1){ cin >> a[i];}
+    rep(i,3,n+1){ cin >> b[i];}
     dp[0] = 0;
-    rep(i,1,n){
-        chmin(dp[i], dp[i-1]+a[i-1]);
-        if(i-2>=0) chmin(dp[i], dp[i-2]+b[i-2]);
+    rep(i,1,n+1){
+        if(i==1) {
+            dp[i] = a[i];
+            continue;
+        }
+        if(i==2) {
+            chmin(dp[i], dp[i-1]+a[i]);
+            continue;
+        }
+        chmin(dp[i], dp[i-1]+a[i]);
+        chmin(dp[i], dp[i-2]+b[i]);
     }
-    cout << dp[n-1] << endl;
+    cout << dp[n] << endl;
 
 }

@@ -36,22 +36,16 @@ int main(){
     int n = s.length();
     int m = t.length();
     vector<vector<int>> dp(n+1, vector<int>(m+1, 0));
+    vector<char> a;
     rep(i,1,n+1){
         rep(j,1,m+1){
-            chmax(dp[i][j], dp[i-1][j]);
-            chmax(dp[i][j], dp[i][j-1]);
-            if(s[i-1]==t[j-1]){
-                chmax(dp[i][j], dp[i-1][j-1]+1);
-            }
+            chmax(dp[i][j], 
+            max({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]+(s[i-1]==t[j-1])}));
         }
     }
     cout << dp[n][m] << endl;
-
-    for(const auto v : dp){
-        for(const auto e : v){
-            cerr << e << " ";
-        }
-        cerr << endl;
-    }
-
+    for(const auto v : a){
+        cout << v;
+    }cout << endl;
+    
 }

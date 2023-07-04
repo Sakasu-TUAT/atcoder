@@ -15,44 +15,55 @@
 #include <queue>
 #include <unordered_map>
 #include <algorithm>
-#include <bitset>
 using namespace std;
 using ll = long long;
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
+//someone_s
 
 template <class T, class U>
 bool chmin(T& a, const U& b) {return (b < a) ? (a = b, true) : false;}
+
 template <class T, class U>
 bool chmax(T& a, const U& b) {return (b > a) ? (a = b, true) : false;}
+
 void in() {}
+
 template <class Head, class... Tail>
 void in(Head&& head, Tail&&... tail) {
     cin >> head;
     in(std::forward<Tail>(tail)...);
 }
 
+const ll INF = 1e9;
+
 int main(){
     int n; cin >> n;
-    vector<int> p(n), a(n);
-    rep(i,0,n){
-        cin >> p[i] >> a[i];
-    }    
-    vector<vector<int>> dp(n+1, vector<int>(n+1));
-
-    dp[0][n] = 0;
-
-    rep(l,1,n+1){
-        for(int r=n; r>l; r--){
-            chmax(dp[l+1][r], (l<=p[l-1] and p[l-1]<=r ? dp[l][r] + a[l-1] : dp[l][r]) );
-            chmax(dp[l][r-1], (l<=p[r-1] and p[r-1]<=r ? dp[l][r] + a[r-1] : dp[l][r]) );
-        }
+    vector<int> dp(n+1, INF), h(n+1);
+    rep(i,1,n+1){ cin >> h[i];}
+    dp[0] = 0;
+    dp[1] = 0;
+    dp[2] = abs(h[2]-h[1]);
+    rep(i,3,n+1){
+        chmin(dp[i], dp[i-1]+abs(h[i]-h[i-1]));
+        chmin(dp[i], dp[i-2]+abs(h[i]-h[i-2]));
     }
+    cerr  << "dp[n]: " << dp[n] << endl;
+    for(const auto v : dp){
+        cerr << v << ", ";
+    }cerr << endl;
 
-    int ans = 0;
-    rep(i,0,n+1){
-        chmax(ans, dp[i][i]);
+    vector<int> ans;
+    int now = n;
+    while(now!=0){
+        ans.emplace_back(now);
+        if(dp[now] == dp[now-2]+abs(h[now]-h[now-2])){
+            now--;
+        } 
+        now--;
     }
-    cout << ans << endl;
-
+    reverse(ans.begin(), ans.end());
+    cout << ans.size() << endl;
+    for(const auto v : ans){
+        cout << v << " ";
+    }cout << endl;
 }
-
