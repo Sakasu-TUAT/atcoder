@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
+#include <unordered_set>
 
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
@@ -21,7 +22,7 @@
 #define rall(x) (x).rbegin(), (x).rend()
 
 using namespace std;
-using ll = long long;
+using ll = uint64_t;
 using P = pair<ll, ll>;
 
 int gcd(int a,int b){return b?gcd(b,a%b):a;}
@@ -42,43 +43,28 @@ const ll mod = 1000000007;
 
 
 int main(){
-    int a, b, c;
-    // cin >> a >> b >> c;
-    vector<int> vec(3);
-    rep(i,0,3){
-        cin >> vec[i];
+    int n; cin >> n; 
+    vector<tuple<ll, ll, ll>> p(n);
+    ll sum = 0;
+    rep(i,0,n) {
+        ll a, b; cin >> a >> b;
+        p[i] = {2*a+b, a+b, a};
+        sum += a;
     }
-    int cnt;
-    rep(i,0,3){
-        if(vec[i]%2==0) cnt++;
-    }
-    int ans = 0; 
-    cerr << "cnt : " << cnt << endl;
-    if(cnt==2){
-        rep(i,0,3){
-            if(vec[i]%2==0){
-                vec[i]++;
-            }
+    sort(rall(p));
+    ll takahashi_sum = 0;
+    rep(i,0,n){
+        auto [x, t_sum, a] = p[i];
+        // cerr << t_sum << ", " << a << ", " << b << endl;
+        takahashi_sum += t_sum;
+        sum -= a;
+        if(takahashi_sum > sum){
+            cout << i+1 << endl;
+            return 0;
         }
-        ans++;
-    } else if(3-cnt==2){
-        rep(i,0,3){
-            if(vec[i]%2==1){
-                vec[i]++;
-            }
-        }
-        ans++;
     }
-    for(const auto v : vec) {
-        cerr <<  v << " ";
-    }cerr << endl;
-    int maxV = max({vec[0], vec[1], vec[2]});
-    rep(i,0,3){
-        ans += (maxV-vec[i])/2;
-    }
-    cout << ans << endl;
-
-
-
     return 0;
 }
+
+
+
