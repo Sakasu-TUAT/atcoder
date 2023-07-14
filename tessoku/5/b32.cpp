@@ -73,8 +73,17 @@ ll combination(ll n, ll k){
 }
 
 int main(){
-    ll n; cin >> n;
-    cout << n/3 + n/5 + n/7 - n/15 - n/21 - n/35 + n/105 << endl;
+    ll n, k; cin >> n >> k;
+    vector<bool> dp(n+1);
+    vector<int> a(n);
+    rep(i,0,k){ cin >> a[i];}
+    rep(i,0,n+1){
+        rep(j,0,k){
+            if(i-a[j]>=0 and !dp[i-a[j]]) dp[i] = true;
+        }
+    }
+    cout << (dp[n] ? "First" : "Second") << endl;
+
 
 
     return 0;

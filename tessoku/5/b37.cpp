@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
-#include <unordered_set>
+#include <functional>
 
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
@@ -22,10 +22,15 @@
 #define rall(x) (x).rbegin(), (x).rend()
 
 using namespace std;
-using ll = uint64_t;
+using ll = long long;
 using P = pair<ll, ll>;
 
-int gcd(int a,int b){return b?gcd(b,a%b):a;}
+vector<bool> Eratostenes(int n){
+    vector<bool> isprime(n+1, true);isprime[1] = false;
+    rep(p,2,n+1){ if(!isprime[p]) continue; for(int q = p*2; q <= n; q+=p){ isprime[q] = false; }}
+    return isprime;
+}
+ll gcd(ll a,ll b){return b?gcd(b,a%b):a;}
 template <class T, class U>
 bool chmin(T& a, const U& b) {return (b < a) ? (a = b, true) : false;}
 template <class T, class U>
@@ -40,34 +45,36 @@ void in(Head&& head, Tail&&... tail) {
 }
 const ll INF = 1LL << 60;
 const ll mod = 1000000007;
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
 
-
-int main(){
-    ll h, w; cin >> h >> w;
-    vector<string> s(h);
-    rep(i,0,h){cin >> s[i];}
-
-    rep(i,0,h){
-        rep(j,0,w){
-            if(s[i][j] != '.') continue;
-            rep(k,0,5){
-                if(i!=0) if(s[i-1][j] == '1'+k) continue;
-                if(i!=h-1) if(s[i+1][j] == '1'+k) continue;
-                if(j!=0) if(s[i][j-1] == '1'+k) continue;
-                if(j!=w-1) if(s[i][j+1] == '1'+k) continue;
-                s[i][j] = '1'+k;
-                break;
-            }
+ll power(ll a, ll b) {
+    ll ans = 1;
+    for(ll i=0; i<60; i++){
+        if(b & (1LL<<i)) {
+            ans *= a;
+            ans %= mod;
         }
+        a *= a;
+        a %= mod;
     }
-    rep(i,0,h){
-        cout << s[i] << endl;
-    }
-    
-    return 0;
+    return ans;
 }
 
+ll combination(ll n, ll k){
+    assert(!(n < k));
+    assert(!(n < 0 || k < 0));
+    ll s = 1, t = 1;
+    rep(i,1,k+1){
+        s = s*(n-i+1) % mod;
+        t = t*i % mod; 
+    }
+    // フェルマーの小定理 a^(p-1) ≡ 1 (mod.p) (∵ gcd(a, p) = 1)
+    // より、tの逆元は t^(p-2) ≡ t^(-1) (mod. p)
+    return s * power(t, mod-2) % mod;
+}
+
+int main(){
+   
 
 
+    return 0;
+}
