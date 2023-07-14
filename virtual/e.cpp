@@ -42,7 +42,28 @@ const ll INF = 1LL << 60;
 const ll mod = 1000000007;
 
 int main(){
-    int n, k; cin >> n >> k;
+    int n; cin >> n;
+    multiset<ll> ms;
+    ll ans = 0;
+    rep(i,0,n){
+        ll a; cin >> a;
+        auto it = ms.lower_bound(a);
+        if(it==ms.begin()){
+            ms.insert(a);
+            ans++;
+        } else {
+            it--;
+            ll v = *it;
+            // cerr << "delete: " << v << endl;
+            ms.erase(ms.find(v));
+            ms.insert(a);
+        }
+        // for(const auto v : ms){
+        //     cerr << v << " ";
+        // }cerr << endl;
+    }
+    cout << ans << endl;
+    
     
     
     return 0;

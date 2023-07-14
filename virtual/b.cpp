@@ -42,16 +42,20 @@ const ll mod = 1000000007;
 
 
 int main(){
-    double r, x, y; 
-    cin >> r >> x >> y;
-    double d = sqrt(x*x+y*y);
-    int ans = (d/r);
-    cerr << "ans : " << ans << endl;
-    if(d<r) ans = 2;
-    else if(d-r*ans > 0) ans++;
-    cout << ans << endl;
-
+    int n; cin >> n;
+    set<string> st;
+    rep(i,0,n){
+        string s; cin >> s;
+        st.insert(s);
+    }
+    for(const auto s : st){
+        if(st.count('!'+s)){
+            cout << s << endl;
+            return 0;
+        }
+    }
     
+    cout << "satisfiable" << endl;
 
 
     return 0;

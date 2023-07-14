@@ -45,26 +45,18 @@ int dy[4] = {0, 1, 0, -1};
 
 
 int main(){
-    ll h, w; cin >> h >> w;
-    vector<string> s(h);
-    rep(i,0,h){cin >> s[i];}
+    string n; cin >> n;
+    int N = 0;
+    int s = 0;
+    rep(i,0,n.length()){
+        s += (n[i]-'0');
+        N*=10;
+        N+=(n[i]-'0');
+        
+    }
+    cerr << N << ", " << s << endl;
+    cout << (N%s==0 ? "Yes" : "No") << endl;
 
-    rep(i,0,h){
-        rep(j,0,w){
-            if(s[i][j] != '.') continue;
-            rep(k,0,5){
-                if(i!=0) if(s[i-1][j] == '1'+k) continue;
-                if(i!=h-1) if(s[i+1][j] == '1'+k) continue;
-                if(j!=0) if(s[i][j-1] == '1'+k) continue;
-                if(j!=w-1) if(s[i][j+1] == '1'+k) continue;
-                s[i][j] = '1'+k;
-                break;
-            }
-        }
-    }
-    rep(i,0,h){
-        cout << s[i] << endl;
-    }
     
     return 0;
 }

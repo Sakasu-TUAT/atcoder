@@ -44,44 +44,25 @@ const ll mod = 1000000007;
 
 
 int main(){
-    uint64_t n, x; cin >> n >> x;
-    string s; cin >> s;
-
-    vector<int> bit;
-    while (x != 0) {
-        bit.emplace_back(x%2);
-        x /= 2;
+    ll n; cin >> n;
+    vector<ll> a(n);
+    map<ll, ll> mp;
+    ll ans = 0;
+    rep(i,0,n){
+        cin >> a[i];
+        ans += a[i];
+        mp[a[i]]++;
     }
-    reverse(all(bit));
+    ll q; cin >> q;
 
-    auto f = [&](vector<int> bit, string s) -> vector<int> {
-        for(const auto v : s){
-            if(v=='U') {
-                // x/=2;
-                bit.pop_back();
-            }
-            else if(v=='L') {
-                // x*=2;
-                bit.push_back(0);
-            }
-            else {
-                bit.push_back(1);
-            }
-    
-        }
-        return bit;
-    };
-    bit = f(bit, s);
-
-    reverse(all(bit));
-
-    uint64_t ans = 0;
-    ll b = 1;
-    for(const auto v : bit){
-        ans += b*v;
-        b = (b << 1);
+    while(q--){
+        ll b, c; cin >> b >> c;
+        ans += (c-b)*mp[b];
+        mp[c] += mp[b];
+        mp[b] = 0;
+        cout << ans << endl;
     }
-    cout << ans << endl;
+
 
     return 0;
 }

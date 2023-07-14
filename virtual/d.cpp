@@ -66,22 +66,34 @@ vector<bool> Eratosthenes(int N) {
 
 
 int main(){
-    ll q; cin >> q;
-    ll l, r;
-    auto v = Eratosthenes(1e5);
-    vector<int> sum(100000), x(100000);
-    rep(i,1,1e5){
-        if (v[i] and v[(i+1)/2]) x[i]=1;
+    ll n, m; 
+    cin >> n >> m;
+    vector<ll> x(n+1), b(n+1);
+    rep(i,0,n){ cin >> x[i];}
+    rep(i,0,m){
+       ll c, y; cin >> c >> y;
+       b[c] = y;
     }
-    rep(i,1,1e5){
-        sum[i] = sum[i-1]+x[i];
+
+    vector<vector<ll>> dp(n+1, vector<ll>(n+1, 0));
+    dp[0][0] = 0;
+    rep(i,1,n+1){
+        rep(j,1,i+1){
+            dp[i][j] = dp[i-1][j-1] + x[i-1] + b[j];
+        }
+        dp[i][0] = 0;
+        rep(j,0,i){
+            chmax(dp[i][0], dp[i-1][j]);
+        }
     }
-    for(int i=0; i<20; i++){
-        cerr << "i. sum[i] = " << i << ", " << sum[i] << endl;
+    ll ans = 0;
+    rep(i,0,n+1){
+        chmax(ans, dp[n][i]);
     }
-    rep(i,0,q){
-        cin >> l >> r;
-        cout << sum[r]-sum[l-1] << endl;
-    }
+    cout << ans << endl;
+    // cerr << "dp: " << endl;
+    // printTable(dp);
+
+
     return 0;
 }
