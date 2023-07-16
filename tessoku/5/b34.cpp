@@ -73,16 +73,14 @@ ll combination(ll n, ll k){
 }
 
 int main(){
-    ll n, h, w; cin >> n >> h >> w;
-    vector<int> a(2*n);
-    for(int i=0; i<2*n; i++){ cin >> a[i];}
-    int xor_sum = --a[0];
-    rep(i,1,2*n){
-        xor_sum ^= --a[i];
+    int n, x, y; cin >> n >> x >> y;
+    vector<int> grundy = {0, 0, 1, 1, 2};
+
+    int xor_sum = 0;
+    rep(i,0,n){
+        ll a; cin >> a;
+        xor_sum ^= grundy[a%5];
     }
-    cerr << xor_sum << endl;
-    cout << (xor_sum != 0 ? "First" : "Second") << endl;
-
-
+    cout << (xor_sum != 0 ? "First" : "Second" ) << endl;
     return 0;
 }
