@@ -44,24 +44,31 @@ const ll mod = 1000000007;
 
 
 int main(){
-    ll n; cin >> n;
-    vector<ll> a(n);
-    map<ll, ll> mp;
-    ll ans = 0;
-    rep(i,0,n){
-        cin >> a[i];
-        ans += a[i];
-        mp[a[i]]++;
+    vector<string> s(9); 
+    rep(i,0,9){
+        cin >> s[i];
     }
-    ll q; cin >> q;
-
-    while(q--){
-        ll b, c; cin >> b >> c;
-        ans += (c-b)*mp[b];
-        mp[c] += mp[b];
-        mp[b] = 0;
-        cout << ans << endl;
+    auto calc = [](P p1, P p2){
+        return  abs(p1.first-p2.first)*abs(p1.first-p2.first) + abs(p1.second-p2.second)*abs(p1.second-p2.second);
+    };
+    int ans = 0;
+    auto check = [&](P p) -> bool{
+        int y = p.first, x = p.second; 
+        return (0<=y and y<=8 and 0<=x and x<= 8 and s[y][x] == '#');
+    };
+    rep(i,0,9){
+        rep(j,0,9){
+            rep(k,1,9){
+                rep(l,0,9){
+                    P p1{i, j}, p2{i+k, j+l}, p3{i+k+l, j+l-k}, p4{i+l, j-k};
+                    if(check(p1) and check(p2) and check(p3) and check(p4)){
+                        ans++;
+                    }
+                }
+            }
+        }
     }
+    cout << ans << endl;
 
 
     return 0;

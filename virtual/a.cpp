@@ -45,17 +45,17 @@ int dy[4] = {0, 1, 0, -1};
 
 
 int main(){
-    string n; cin >> n;
-    int N = 0;
-    int s = 0;
-    rep(i,0,n.length()){
-        s += (n[i]-'0');
-        N*=10;
-        N+=(n[i]-'0');
-        
+    ll n, x; cin >> n >> x;
+    double ans = 0;
+    rep(i,0,n){
+        double v, p; cin >> v >> p;
+        ans += v*p;
+        if(ans > x*100){
+            cout << i+1 << endl;
+            return 0;
+        }
     }
-    cerr << N << ", " << s << endl;
-    cout << (N%s==0 ? "Yes" : "No") << endl;
+    cout << -1 << endl;
 
     
     return 0;
