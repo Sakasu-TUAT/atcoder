@@ -36,7 +36,7 @@ bool chmin(T& a, const U& b) {return (b < a) ? (a = b, true) : false;}
 template <class T, class U>
 bool chmax(T& a, const U& b) {return (b > a) ? (a = b, true) : false;}
 void in() {}
-void printMatrix(const auto &vec){for(const auto &v : vec){ for(const auto &e : v){cerr << e << " ";}cerr << endl;}}
+void printVec(const auto &vec){for(const auto &v : vec){ cerr << v << " ";}cerr << endl;}
 template<class T> void printTable(const vector<vector<T>> &tb){ for(const auto &i : tb){ for(const auto &j : i){cerr << j << " ";}cerr << endl;}}
 template <class Head, class... Tail>
 void in(Head&& head, Tail&&... tail) {
@@ -73,8 +73,31 @@ ll combination(ll n, ll k){
 }
 
 int main(){
-   
+   int n, d; cin >> n >> d;
+   vector<int> x(n), y(n);
+   rep(i,0,n){ 
+        cin >> x[i] >> y[i];
+        x[i]--; y[i];
+   }
+   vector<bool> used(n);
+    int ans = 0;
+   rep(i,0,d){
+    int maxValue = 0;
+    int maxID = -1;
+    rep(j,0,n){
+        if(used[j]) continue;
+        if(maxValue < y[j] and x[j] <= i){
+            maxValue = y[j];
+            maxID = j;
+            // cerr << maxValue << " ";
+        }
+    }
 
-
+    if(maxID != -1){
+        ans +=maxValue;
+        used[maxID] = true;
+    }
+   }
+   cout << ans << endl;
     return 0;
 }
