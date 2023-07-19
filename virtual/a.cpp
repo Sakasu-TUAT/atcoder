@@ -45,17 +45,8 @@ int dy[4] = {0, 1, 0, -1};
 
 
 int main(){
-    ll n, x; cin >> n >> x;
-    double ans = 0;
-    rep(i,0,n){
-        double v, p; cin >> v >> p;
-        ans += v*p;
-        if(ans > x*100){
-            cout << i+1 << endl;
-            return 0;
-        }
-    }
-    cout << -1 << endl;
+    ll a, b; cin >> a >> b;
+    cout << ((a+b-1)/b) << endl;
 
     
     return 0;
