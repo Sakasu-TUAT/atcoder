@@ -42,27 +42,21 @@ const ll INF = 1LL << 60;
 const ll mod = 1000000007;
 
 int main(){
-    int n; cin >> n;
-    multiset<ll> ms;
+    ll n; cin >> n;
+
     ll ans = 0;
-    rep(i,0,n){
-        ll a; cin >> a;
-        auto it = ms.lower_bound(a);
-        if(it==ms.begin()){
-            ms.insert(a);
-            ans++;
-        } else {
-            it--;
-            ll v = *it;
-            // cerr << "delete: " << v << endl;
-            ms.erase(ms.find(v));
-            ms.insert(a);
+    if(n%2==1){
+        cout << 0 << endl;
+    } else {
+        ll x=5;
+        while(n!=0){
+            if(n%5==0) ans += n/x;
+            n-=2;
+            x*x;
         }
-        // for(const auto v : ms){
-        //     cerr << v << " ";
-        // }cerr << endl;
     }
     cout << ans << endl;
+
     
     
     

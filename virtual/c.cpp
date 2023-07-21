@@ -44,32 +44,31 @@ const ll mod = 1000000007;
 
 
 int main(){
-    vector<string> s(9); 
-    rep(i,0,9){
-        cin >> s[i];
+    ll n, q; cin >> n >> q;
+    vector<int> vec(n+1);
+    map<int, int> mp;
+    rep(i,1,n+1){
+        vec[i] = i;
+        mp[i] = i;
     }
-    auto calc = [](P p1, P p2){
-        return  abs(p1.first-p2.first)*abs(p1.first-p2.first) + abs(p1.second-p2.second)*abs(p1.second-p2.second);
-    };
-    int ans = 0;
-    auto check = [&](P p) -> bool{
-        int y = p.first, x = p.second; 
-        return (0<=y and y<=8 and 0<=x and x<= 8 and s[y][x] == '#');
-    };
-    rep(i,0,9){
-        rep(j,0,9){
-            rep(k,1,9){
-                rep(l,0,9){
-                    P p1{i, j}, p2{i+k, j+l}, p3{i+k+l, j+l-k}, p4{i+l, j-k};
-                    if(check(p1) and check(p2) and check(p3) and check(p4)){
-                        ans++;
-                    }
-                }
-            }
-        }
+    while(q--){
+        ll x; cin >> x;
+        int pos1 = mp[x];
+        int pos2 = pos1;
+        if(pos1==n) pos2--;
+        else pos2++;
+        int v1 = vec[pos1];
+        int v2 = vec[pos2];
+        swap(vec[pos1], vec[pos2]);
+        swap(mp[v1], mp[v2]);
     }
-    cout << ans << endl;
-
+    for(const auto v : vec){
+        cerr << v << " ";
+    }cerr << endl;
+    rep(i,1,n+1){
+        cout << vec[i] << " ";
+    }
+    cout << endl;
 
     return 0;
 }

@@ -42,15 +42,8 @@ const ll mod = 1000000007;
 
 
 int main(){
-    ll n, a, b; cin >> n >> a >> b;
-    ll allSum = (1+n)*n/2;
-    auto calc = [](int n, int a) -> ll {
-        return ((n/a)*a +a)*(n/a)/2;
-    };
-    cerr << "debug: " <<((n/a)*a +a)*(n/a)/2 << endl;
-    cerr << allSum << ", " << ((n/a)*a +a)*(n/a)/2 << ", " << ((n/b)*b +b)*(n/b)/2 << ", " << calc(n, a*b)<< endl;
-    ll lcmN = a*b/gcd(a, b);
-    cout << allSum - ((n/a)*a +a)*(n/a)/2 - ((n/b)*b +b)*(n/b)/2 +((n/(lcmN))*(lcmN)+(lcmN))*(n/(lcmN))/2 << endl;
-
+   string s; cin >> s;
+   sort(all(s));
+   cout << s << endl;
     return 0;
 }

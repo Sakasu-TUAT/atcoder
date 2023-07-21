@@ -45,8 +45,15 @@ int dy[4] = {0, 1, 0, -1};
 
 
 int main(){
-    ll a, b; cin >> a >> b;
-    cout << ((a+b-1)/b) << endl;
+    double a, b, c, x;
+    cin >> a >>b >> c >> x;
+    cout << fixed << setprecision(10) << endl;
+    if(x<=a) cout << 1.0 << endl;
+    else if(a+1<= x and x <= b){
+        cout << c/(b-a) << endl;
+    }else {
+        cout << 0.0 << endl;
+    }
 
     
     return 0;

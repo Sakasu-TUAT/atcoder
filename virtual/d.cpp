@@ -79,34 +79,59 @@ vector<long long> enum_divisors(long long N) {
 }
 
 int main(){
-    ll n, m; 
-    cin >> n >> m;
-    vector<ll> x(n+1), b(n+1);
-    rep(i,0,n){ cin >> x[i];}
-    rep(i,0,m){
-       ll c, y; cin >> c >> y;
-       b[c] = y;
+    string s; cin >> s;
+    int n = s.length();
+    vector<int> a(n);
+    rep(i,0,n){
+        a[i] = (s[i]-'0');
     }
 
-    vector<vector<ll>> dp(n+1, vector<ll>(n+1, 0));
-    dp[0][0] = 0;
-    rep(i,1,n+1){
-        rep(j,1,i+1){
-            dp[i][j] = dp[i-1][j-1] + x[i-1] + b[j];
+    if(n==2){
+        if((10*a[1]+a[0])%8==0 or (10*a[0]+a[1])%8==0) {
+            cout << "Yes" << endl;
+            return 0;
         }
-        dp[i][0] = 0;
-        rep(j,0,i){
-            chmax(dp[i][0], dp[i-1][j]);
+    } else if(n==1){
+        if(a[0]%8==0){
+           cout << "Yes" << endl;
+        return 0;
         }
     }
-    ll ans = 0;
-    rep(i,0,n+1){
-        chmax(ans, dp[n][i]);
+    vector<int> eightTable;
+    rep(i,112,1000){
+        if(i%8==0) {
+            eightTable.emplace_back(i);
+            // cerr << i << ", ";
+        }
     }
-    cout << ans << endl;
-    // cerr << "dp: " << endl;
-    // printTable(dp);
+    // cerr << endl;
 
+
+
+    for(const auto v : eightTable){
+        int cnt = 0;
+        string strV = to_string(v);
+        bool result = false;
+        map<int, int> mp;
+        rep(i,0,n){
+            mp[a[i]]++;
+        }
+        bool ok = true;
+        for(const auto str : strV){
+            if(mp[str-'0']==0) {
+                ok &= false;
+            }
+            else mp[str-'0']--; 
+        }
+        if(ok) {
+            cout << "Yes" << endl;
+            return 0;
+        }
+ 
+    }
+    cout << "No" << endl;
+
+    
 
     return 0;
 }
