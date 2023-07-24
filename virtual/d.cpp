@@ -79,59 +79,24 @@ vector<long long> enum_divisors(long long N) {
 }
 
 int main(){
-    string s; cin >> s;
-    int n = s.length();
-    vector<int> a(n);
+    ll n; cin >> n;
+    vector<int> a(n), b(n);
     rep(i,0,n){
-        a[i] = (s[i]-'0');
+        cin >> a[i];
     }
-
-    if(n==2){
-        if((10*a[1]+a[0])%8==0 or (10*a[0]+a[1])%8==0) {
-            cout << "Yes" << endl;
-            return 0;
-        }
-    } else if(n==1){
-        if(a[0]%8==0){
-           cout << "Yes" << endl;
-        return 0;
+    ll sum = 0;
+    rep(i,0,n){
+        if(i%2==0){
+            sum += a[i];
+        } else {
+            sum -= a[i];
         }
     }
-    vector<int> eightTable;
-    rep(i,112,1000){
-        if(i%8==0) {
-            eightTable.emplace_back(i);
-            // cerr << i << ", ";
-        }
+    cout << sum << " ";
+    rep(i,1,n){
+        cout << -sum+a[i-1]*2 << " ";
+        sum = -sum+a[i-1]*2;
     }
-    // cerr << endl;
-
-
-
-    for(const auto v : eightTable){
-        int cnt = 0;
-        string strV = to_string(v);
-        bool result = false;
-        map<int, int> mp;
-        rep(i,0,n){
-            mp[a[i]]++;
-        }
-        bool ok = true;
-        for(const auto str : strV){
-            if(mp[str-'0']==0) {
-                ok &= false;
-            }
-            else mp[str-'0']--; 
-        }
-        if(ok) {
-            cout << "Yes" << endl;
-            return 0;
-        }
- 
-    }
-    cout << "No" << endl;
-
-    
-
+    cout << endl;
     return 0;
 }

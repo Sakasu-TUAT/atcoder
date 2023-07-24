@@ -44,31 +44,9 @@ const ll mod = 1000000007;
 
 
 int main(){
-    ll n, q; cin >> n >> q;
-    vector<int> vec(n+1);
-    map<int, int> mp;
-    rep(i,1,n+1){
-        vec[i] = i;
-        mp[i] = i;
-    }
-    while(q--){
-        ll x; cin >> x;
-        int pos1 = mp[x];
-        int pos2 = pos1;
-        if(pos1==n) pos2--;
-        else pos2++;
-        int v1 = vec[pos1];
-        int v2 = vec[pos2];
-        swap(vec[pos1], vec[pos2]);
-        swap(mp[v1], mp[v2]);
-    }
-    for(const auto v : vec){
-        cerr << v << " ";
-    }cerr << endl;
-    rep(i,1,n+1){
-        cout << vec[i] << " ";
-    }
-    cout << endl;
-
+    double w, h, x, y; cin >> w >> h >> x >> y;
+    cout << w*h/2 << endl;
+    cout << (w/2==x and h/2==y ? 1 : 0 ) << endl;
+ 
     return 0;
 }

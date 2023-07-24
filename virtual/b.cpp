@@ -42,8 +42,17 @@ const ll mod = 1000000007;
 
 
 int main(){
-   string s; cin >> s;
-   sort(all(s));
-   cout << s << endl;
+   int n; cin >> n;
+   map<ll, ll> mp;
+   rep(i,0,n){
+    ll a; cin >> a;
+    if(!mp[a]) mp[a]++;
+    else mp[a]--;
+   }
+   ll ans = 0;
+   for(const auto [v, k]: mp){
+    if(k!=0) ans++; 
+   }
+   cout << ans << endl;
     return 0;
 }

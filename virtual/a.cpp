@@ -45,14 +45,17 @@ int dy[4] = {0, 1, 0, -1};
 
 
 int main(){
-    double a, b, c, x;
-    cin >> a >>b >> c >> x;
-    cout << fixed << setprecision(10) << endl;
-    if(x<=a) cout << 1.0 << endl;
-    else if(a+1<= x and x <= b){
-        cout << c/(b-a) << endl;
-    }else {
-        cout << 0.0 << endl;
+    int n; cin >> n;
+    map<int, int> mp;
+    rep(i,0,4*n-1){
+        int a; cin >> a;
+        mp[a]++;
+    }
+    for (const auto [k, v] : mp){
+        if(v==3){
+            cout << k << endl;
+            return 0;
+        }
     }
 
     
