@@ -42,17 +42,25 @@ const ll mod = 1000000007;
 
 
 int main(){
-   int n; cin >> n;
-   map<ll, ll> mp;
-   rep(i,0,n){
-    ll a; cin >> a;
-    if(!mp[a]) mp[a]++;
-    else mp[a]--;
-   }
+   ll n, k; cin >> n >> k;
+   vector<P> vec(n);
    ll ans = 0;
-   for(const auto [v, k]: mp){
-    if(k!=0) ans++; 
+   rep(i,0,n){
+        ll a, b; cin >> a >> b;
+        vec.emplace_back(a, b);
+        ans += b;
    }
-   cout << ans << endl;
+   sort(all(vec));
+   ll now = 1;
+   for(const auto &[key, value] : vec){
+        if(ans <= k){
+            cout << now << endl;
+            return 0;
+        }
+        now = key+1;
+        ans -= value;
+   }
+   cout << vec.back().first + 1  << endl;
+
     return 0;
 }

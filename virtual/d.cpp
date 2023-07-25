@@ -78,25 +78,25 @@ vector<long long> enum_divisors(long long N) {
     return res;
 }
 
+
 int main(){
-    ll n; cin >> n;
-    vector<int> a(n), b(n);
-    rep(i,0,n){
-        cin >> a[i];
-    }
-    ll sum = 0;
-    rep(i,0,n){
-        if(i%2==0){
-            sum += a[i];
+    int l, q; cin >> l >> q;
+    set<int> st;
+    st.insert(l);
+    st.insert(0);
+    rep(i,0,q){
+        int c, t; cin >> c >> t;
+        if(c==1){
+            st.insert(t);
         } else {
-            sum -= a[i];
+            auto itr = st.lower_bound(t);
+            if(prev(itr)==st.begin()){
+                cout << *itr << endl;
+            } else {
+                cout << *itr - *prev(itr) << endl;
+            }
         }
-    }
-    cout << sum << " ";
-    rep(i,1,n){
-        cout << -sum+a[i-1]*2 << " ";
-        sum = -sum+a[i-1]*2;
-    }
-    cout << endl;
+     }
+    
     return 0;
 }
