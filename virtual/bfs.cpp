@@ -41,27 +41,54 @@ ll combination(ll n, ll k){ assert(!(n < k)); assert(!(n < 0 || k < 0)); ll s = 
 
 vector<int> dx = {0, 1, 0, -1};
 vector<int> dy = {-1, 0, 1, 0};
+using Graph = vector<vector<ll>>;
 
 int main(){
-    string s; cin >>s;
-    queue<string> que;
-    que.push(s);
-    int cnt = 0;
-    unordered_map<string, int> mp;
+    int n, m;
+    cin >> n >> m;
+    Graph G(n);
+    rep(i,0,m){
+        int a, b; cin >> a >> b;
+        a--; b--;
+        G[a].emplace_back(b);
+        G[b].emplace_back(a);
+    }
+    map<ll, ll> mp;
+    queue<int> que;
+    que.push(0);
+    vector<bool> seen(n);
+    vector<ll> dist(n, INF);
+    vector<ll> cnt(n, 0);
+    dist[0] = 0;
     while(!que.empty()){
-        string current = que.front();
+        int now = que.front();
         que.pop();
-        if(current == "atcoder"){
-            cerr << current << endl;
-            cout << mp[current] << endl;
-            return 0;
+        for(const auto nv : G[now]){
+            if(nv==n-1){
+                mp[dist[now]+1]++;
+                dist[nv] = dist[now]+1;
+                cerr << now+1 << " -> " << nv+1 << endl;
+                continue;
+            } else {
+                if(seen[nv]) continue;
+                if(cnt[])
+                seen[nv] = true;
+                que.push(nv);
+                chmin(dist[nv], dist[now]+1);
+            }
         }
-        rep(i,1,7){
-            string next = current;
-            swap(next[i-1], next[i]); 
-            if(mp.find(next)!=mp.end()) continue;
-            que.push(next);
-            mp[next] = mp[current]+1;
-        }
-    }   
+        seen[now] = true;
+    }
+    // sort(all(mp));
+    if(dist[n-1]==0){
+        cout << 0 << endl;
+        return 0;
+    }
+    for(const auto [k, v] : mp){
+        cout << v%mod << endl;
+        cerr << k << endl;
+        // return 0;
+    }
+
+
 }

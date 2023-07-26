@@ -42,39 +42,19 @@ const ll INF = 1LL << 60;
 const ll mod = 1000000007;
 
 int main(){
-    int n;
-    cin >> n;
-    unordered_map<string, vector<string>> G(n);
-    vector<string> s;
+    ll n, k, q; cin >> n >> k >> q;
+    map<ll, ll> mp;
     rep(i,0,n){
-        string a, b; cin >> a >> b;
-        G[a].emplace_back(b);
-        s.emplace_back(a);
+        mp[i] = -(q);
     }
-    int cnt = 0;
-    unordered_map<string, bool> memo;
+    rep(i,0,q){
+        int a; cin >> a;
+        mp[--a]++;
+    }
     rep(i,0,n){
-        string start = s[i];
-        if(memo[start]) continue;
-        memo[start] = true;
-        queue<string> que;
-        que.push(start);
-        unordered_map<string, bool> visited;
-        visited[start] = true;
-        while(!que.empty()){
-            string now = que.front(); que.pop();
-            for(const auto next : G[now]){
-                if(visited[next]) {
-                    cout << "No" << endl;
-                    return 0;
-                }
-                memo[next] = true;
-                visited[next] = true;
-                que.push(next);
-            }
-        }
+        if(mp[i]+k > 0) cout << "Yes" << endl;
+        else cout << "No" << endl;
     }
-    cout << "Yes" << endl;
 
     return 0;
 }

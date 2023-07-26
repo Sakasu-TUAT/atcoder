@@ -80,23 +80,23 @@ vector<long long> enum_divisors(long long N) {
 
 
 int main(){
-    int l, q; cin >> l >> q;
-    set<int> st;
-    st.insert(l);
-    st.insert(0);
-    rep(i,0,q){
-        int c, t; cin >> c >> t;
-        if(c==1){
-            st.insert(t);
-        } else {
-            auto itr = st.lower_bound(t);
-            if(prev(itr)==st.begin()){
-                cout << *itr << endl;
-            } else {
-                cout << *itr - *prev(itr) << endl;
-            }
-        }
-     }
+    int n, m; cin >> n >> m;
+    priority_queue<ll> que;
+    rep(i,0,n){
+        int a; cin >> a;
+        que.push(a);
+    }
+    rep(i,0,m){
+        ll currentMax = que.top();
+        que.pop();
+        que.push(currentMax/2);
+    }
+    ll ans = 0;
+    while(!que.empty()){
+        ans += que.top();
+        que.pop();
+    }
+    cout << ans << endl;
     
     return 0;
 }

@@ -45,39 +45,10 @@ int dy[4] = {0, 1, 0, -1};
 
 
 int main(){
-    int n; cin >> n;
-    vector<string> s(n);
-    rep(i,0,n){
-        cin >> s[i];
-    }
-    rep(i,0,n){
-        rep(j,0,n){
-            if(i==0){
-                if(j==0){
-                    cout << s[i+1][0];
-                } else {
-                    cout << s[i][j-1];
-                }
-                if(j==n-1) cout << endl;
-            } else if(i==n-1){
-                if(j==n-1){
-                    cout << s[n-2][n-1] << endl;
-                } else {
-                    cout << s[n-1][j+1];
-                }
-            } else{
-                if(j==0){
-                    cout << s[i+1][0]; 
-                } else if(j==n-1){
-                    cout << s[i-1][n-1];
-                } else {
-                    cout << s[i][j];
-                }
-                if(j==n-1) cout << endl;
-            }
-   
-        }  
-    }
+    string s; cin >> s;
+    if(s=="Sunny") cout << "Cloudy" << endl;
+    if(s=="Cloudy") cout << "Rainy" << endl;
+    if(s=="Rainy") cout << "Sunny" << endl;
     return 0;
 }
 

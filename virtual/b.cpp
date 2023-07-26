@@ -42,25 +42,22 @@ const ll mod = 1000000007;
 
 
 int main(){
-   ll n, k; cin >> n >> k;
-   vector<P> vec(n);
-   ll ans = 0;
-   rep(i,0,n){
-        ll a, b; cin >> a >> b;
-        vec.emplace_back(a, b);
-        ans += b;
-   }
-   sort(all(vec));
-   ll now = 1;
-   for(const auto &[key, value] : vec){
-        if(ans <= k){
-            cout << now << endl;
-            return 0;
+   string s; cin >> s;
+   
+   rep(i,0,s.length()){
+        if(i%2==0) {
+            if(!(s[i]=='R' or  s[i]=='U' or  s[i]=='D')){
+                cout << "No" << endl;
+                return 0;
+            }
+        } else {
+            if(!(s[i]=='L' or  s[i]=='U' or  s[i]=='D')){
+                cout << "No" << endl;
+                return 0;
+            }
         }
-        now = key+1;
-        ans -= value;
    }
-   cout << vec.back().first + 1  << endl;
+   cout << "Yes" << endl;
 
     return 0;
 }
