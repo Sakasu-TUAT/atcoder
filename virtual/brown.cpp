@@ -42,42 +42,40 @@ const ll INF = 1LL << 60;
 const ll mod = 1000000007;
 
 int main(){
-   int n, m; 
-   cin >> n >> m;
-   vector<vector<int>> G(n);
-   rep(i,0,m){
-        int u, v; cin >> u >> v;
-        G[--u].emplace_back(--v);
-        G[v].emplace_back(u);
-   }
-   map<int, bool> memo;
-   rep(i,0,n){
-    if(memo[i]) continue;
-    else memo[i] = true;    
-    queue<int> que;
-    que.push(i);
-    int cnt = 0;
-    set<int> st;
-    st.insert(i);
-    while(!que.empty()){
-        int now = que.front();
-        que.pop();
-        for(const auto nv : G[now]){
-            if(memo[nv]) continue;
-            memo[nv] = true;
-            cnt++;
-            st.insert(nv);
-            que.push(nv);
+    int h, w, c, q;
+    cin >> h >> w >> c >> q;
+    vector<tuple<ll, ll, ll>> query;
+    rep(i,0,q){
+        int t, n, c;
+        cin >> t >> n >> c;
+        t--; n--; c--;
+        query.emplace_back(t, n, c);
+    }
+    vector<ll> ans(c);
+    vector<bool> row(h);
+    vector<bool> col(w);
+    reverse(query.begin(), query.end());
+
+    for (const auto &q : query){
+        auto [t, n, color] = q;
+        if(!t){
+            if(row[n]) continue;
+            ans[color] += w;
+            row[n] = true;
+            h--;
+        } else {
+            if(col[n]) continue;
+            ans[color] += h;
+            col[n] = true;
+            w--; 
         }
     }
-    if(cnt != st.size()){
-        cerr << cnt << ", " << st.size() << endl;
-        cout << "No" << endl;
-        return 0;
+    rep(i,0,c){
+        cout << ans[i] << "\n "[i<c-1];
     }
-   }
-   cout << "Yes" << endl;
-    
-    
+        
+
+ 
+  
     return 0;
 }
