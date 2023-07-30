@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
+#include <cinttypes>
 
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
@@ -41,23 +42,35 @@ const ll INF = 1LL << 60;
 const ll mod = 1000000007;
 
 
-int main(){
-   string s; cin >> s;
-   
-   rep(i,0,s.length()){
-        if(i%2==0) {
-            if(!(s[i]=='R' or  s[i]=='U' or  s[i]=='D')){
-                cout << "No" << endl;
-                return 0;
-            }
-        } else {
-            if(!(s[i]=='L' or  s[i]=='U' or  s[i]=='D')){
-                cout << "No" << endl;
-                return 0;
-            }
-        }
-   }
-   cout << "Yes" << endl;
+bool IsPrime(int num)
+{
+    if (num < 2) return false;
+    else if (num == 2) return true;
+    else if (num % 2 == 0) return false; // 偶数はあらかじめ除く
 
+    double sqrtNum = sqrt(num);
+    for (int i = 3; i <= sqrtNum; i += 2)
+    {
+        if (num % i == 0)
+        {
+            // 素数ではない
+            return false;
+        }
+    }
+
+    // 素数である
+    return true;
+}
+
+int main(){
+    int n; cin >> n;
+    int ans = 0;
+    rep(i,0,n){
+        int a; cin >> a;
+        if(a>10) ans+=(a-10);
+    }
+    cout << ans << endl;
+   
+ 
     return 0;
 }

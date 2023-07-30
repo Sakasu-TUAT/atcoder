@@ -41,59 +41,43 @@ void in(Head&& head, Tail&&... tail) {
 const ll INF = 1LL << 60;
 const ll mod = 1000000007;
 
-// 1 以上 N 以下の整数が素数かどうかを返す
-vector<bool> Eratosthenes(int N) {
-    // テーブル
-    vector<bool> isprime(N+1, true);
-
-    // 0, 1 は予めふるい落としておく
-    isprime[0] = isprime[1] = false;
-
-    // ふるい
-    for (int p = 2; p <= N; ++p) {
-        // すでに合成数であるものはスキップする
-        if (!isprime[p]) continue;
-
-        // p 以外の p の倍数から素数ラベルを剥奪
-        for (int q = p * 2; q <= N; q += p) {
-            isprime[q] = false;
-        }
-    }
-
-    // 1 以上 N 以下の整数が素数かどうか
-    return isprime;
-}
-
-vector<long long> enum_divisors(long long N) {
-    vector<long long> res;
-    for (long long i = 1; i * i <= N; ++i) {
-        if (N % i == 0) {
-            res.push_back(i);
-            // 重複しないならば i の相方である N/i も push
-            if (N/i != i) res.push_back(N/i);
-        }
-    }
-    // 小さい順に並び替える
-    sort(res.begin(), res.end());
-    return res;
-}
-
-
 int main(){
-    int n; cin >> n;
-    bitset<100001> bit(1);
-    int total = 0;
-    rep(i,0,n){
-        int t;
-        cin >> t;
-        total += t;
-        bit |= (bit<<t);
+   int n, m; 
+   cin >> n >> m;
+   vector<vector<int>> G(n);
+   rep(i,0,m){
+        int u, v; cin >> u >> v;
+        G[--u].emplace_back(--v);
+        G[v].emplace_back(u);
+   }
+   map<int, bool> memo;
+   rep(i,0,n){
+    if(memo[i]) continue;
+    else memo[i] = true;    
+    queue<int> que;
+    que.push(i);
+    int cnt = 0;
+    set<int> st;
+    st.insert(i);
+    while(!que.empty()){
+        int now = que.front();
+        que.pop();
+        for(const auto nv : G[now]){
+            if(memo[nv]) continue;
+            memo[nv] = true;
+            cnt++;
+            st.insert(nv);
+            que.push(nv);
+        }
     }
-    ll ans = INF;
-    rep(i,0,total+1){
-        if(bit[i]) chmin(ans, max(total-i,i));
+    if(cnt != st.size()){
+        cerr << cnt << ", " << st.size() << endl;
+        cout << "No" << endl;
+        return 0;
     }
-    cout << ans << '\n';
+   }
+   cout << "Yes" << endl;
+    
     
     return 0;
 }

@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
-#include <unordered_set>
+#include <cinttypes>
 
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
@@ -22,7 +22,7 @@
 #define rall(x) (x).rbegin(), (x).rend()
 
 using namespace std;
-using ll = uint64_t;
+using ll = long long;
 using P = pair<ll, ll>;
 
 int gcd(int a,int b){return b?gcd(b,a%b):a;}
@@ -40,17 +40,32 @@ void in(Head&& head, Tail&&... tail) {
 }
 const ll INF = 1LL << 60;
 const ll mod = 1000000007;
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
 
 
-int main(){
-    string s; cin >> s;
-    if(s=="Sunny") cout << "Cloudy" << endl;
-    if(s=="Cloudy") cout << "Rainy" << endl;
-    if(s=="Rainy") cout << "Sunny" << endl;
-    return 0;
+bool IsPrime(int num)
+{
+    if (num < 2) return false;
+    else if (num == 2) return true;
+    else if (num % 2 == 0) return false; // 偶数はあらかじめ除く
+
+    double sqrtNum = sqrt(num);
+    for (int i = 3; i <= sqrtNum; i += 2)
+    {
+        if (num % i == 0)
+        {
+            // 素数ではない
+            return false;
+        }
+    }
+
+    // 素数である
+    return true;
 }
 
-
-
+int main(){
+    int x, y; cin >> x >> y;
+    if(x==y) cout << x << endl;
+    else cout << (3-x-y) << endl;
+    
+    return 0;
+}

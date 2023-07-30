@@ -39,22 +39,70 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 const ll INF = 1LL << 60;
-const ll mod = 1000000007;
+const ll mod = 1000000000+7;
+
+
+bool IsPrime(int num)
+{
+    if (num < 2) return false;
+    else if (num == 2) return true;
+    else if (num % 2 == 0) return false; // 偶数はあらかじめ除く
+
+    double sqrtNum = sqrt(num);
+    for (int i = 3; i <= sqrtNum; i += 2)
+    {
+        if (num % i == 0)
+        {
+            // 素数ではない
+            return false;
+        }
+    }
+
+    // 素数である
+    return true;
+}
+
+long long pow(long long x, long long n) {
+    long long ret = 1;
+    while (n > 0) {
+        if (n & 1) ret = ret * x % mod;  // n の最下位bitが 1 ならば x^(2^i) をかける
+        x = x * x % mod;
+        n >>= 1;  // n を1bit 左にずらす
+    }
+    return ret;
+}
 
 int main(){
-    ll n, k, q; cin >> n >> k >> q;
-    map<ll, ll> mp;
-    rep(i,0,n){
-        mp[i] = -(q);
-    }
-    rep(i,0,q){
-        int a; cin >> a;
-        mp[--a]++;
-    }
-    rep(i,0,n){
-        if(mp[i]+k > 0) cout << "Yes" << endl;
-        else cout << "No" << endl;
-    }
+   int n, m; cin >> n >> m;
+   using Graph = vector<vector<int>> ;
+   Graph G(n, vector<int>());
+   rep(i,0,m){
+    int a,b; cin >> a >> b;
+    G[--a].emplace_back(--b);
+    // G[b].emplace_back(a);
+   }
+   ll ans = 0;
+
+   rep(i,0,n){ 
+        map<int, bool> visited;
+        queue<int> que;
+        que.push(i);
+        visited[i] = true;
+        while(!que.empty()){
+            int now = que.front();
+            que.pop();
+            for(const auto next : G[now]){
+                if(visited[next]) continue;
+                visited[next] = true;
+                que.push(next);
+            }
+        }
+        rep(i,0,n){
+            ans+= visited[i];
+        }
+   }
+
+   cout << ans << endl;
 
     return 0;
 }

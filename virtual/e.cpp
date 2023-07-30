@@ -39,26 +39,41 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 const ll INF = 1LL << 60;
-const ll mod = 1000000007;
+const ll MOD = 1000000007;
+
+#include <iostream>
+using namespace std;
+
+// ax + by = gcd(a, b) となるような (x, y) を求める
+// 多くの場合 a と b は互いに素として ax + by = 1 となる (x, y) を求める
+long long extGCD(long long a, long long b, long long &x, long long &y) {
+    if (b == 0) {
+        x = 1;
+        y = 0;
+        return a;
+    }
+    long long d = extGCD(b, a%b, y, x); // 再帰的に解く
+    y -= a / b * x;
+    return d;
+}
+
+// 負の数にも対応した mod (a = -11 とかでも OK) 
+inline long long mod(long long a, long long m) {
+    return (a % m + m) % m;
+}
+
+// 逆元計算 (ここでは a と m が互いに素であることが必要)
+long long modinv(long long a, long long m) {
+    long long x, y;
+    extGCD(a, m, x, y);
+    return mod(x, m); // 気持ち的には x % m だが、x が負かもしれないので
+}
 
 int main(){
-    ll n; cin >> n;
-
-    ll ans = 0;
-    if(n%2==1){
-        cout << 0 << endl;
-    } else {
-        ll x=5;
-        while(n!=0){
-            if(n%5==0) ans += n/x;
-            n-=2;
-            x*x;
-        }
+    int t; cin >> t;
+    while(t--){
+        ll n, s, k; cin >> n >> s >> k;
+        cout << (n-modinv(k, n)*s) << endl;
     }
-    cout << ans << endl;
-
-    
-    
-    
     return 0;
 }
