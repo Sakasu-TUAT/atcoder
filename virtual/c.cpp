@@ -39,7 +39,7 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 const ll INF = 1LL << 60;
-const ll mod = 1000000000+7;
+const ll mod = 1000000007;
 
 
 bool IsPrime(int num)
@@ -72,37 +72,43 @@ long long pow(long long x, long long n) {
     return ret;
 }
 
+struct UnionFind {
+	//自身が親であれば、その集合に属する頂点数に-1を掛けたもの
+	//そうでなければ親のid
+	vector<int> r;
+	UnionFind(int N) {
+		r = vector<int>(N, -1);
+	}
+	int root(int x) {
+		if (r[x] < 0) return x;
+		return r[x] = root(r[x]);
+	}
+	bool unite(int x, int y) {
+		x = root(x);
+		y = root(y);
+		if (x == y) return false;
+		if (r[x] > r[y]) swap(x, y);
+		r[x] += r[y];
+		r[y] = x;
+		return true;
+	}
+	int size(int x) {
+		return -r[root(x)];
+	}
+};
+
 int main(){
-   int n, m; cin >> n >> m;
-   using Graph = vector<vector<int>> ;
-   Graph G(n, vector<int>());
-   rep(i,0,m){
-    int a,b; cin >> a >> b;
-    G[--a].emplace_back(--b);
-    // G[b].emplace_back(a);
-   }
-   ll ans = 0;
-
-   rep(i,0,n){ 
-        map<int, bool> visited;
-        queue<int> que;
-        que.push(i);
-        visited[i] = true;
-        while(!que.empty()){
-            int now = que.front();
-            que.pop();
-            for(const auto next : G[now]){
-                if(visited[next]) continue;
-                visited[next] = true;
-                que.push(next);
-            }
-        }
-        rep(i,0,n){
-            ans+= visited[i];
-        }
-   }
-
-   cout << ans << endl;
-
+    int n, m; cin >> n >> m;
+    UnionFind UF(n);
+    rep(i,0,m){
+        int a, b; cin >> a >> b;
+        a--; b--;
+        UF.unite(a, b);
+    }
+    ll ans = 0;
+    rep(i,0,n){
+        chmax(ans, UF.size(i));
+    }
+    cout << ans << endl;
     return 0;
 }

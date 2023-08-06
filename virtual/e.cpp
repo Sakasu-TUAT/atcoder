@@ -39,7 +39,7 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 const ll INF = 1LL << 60;
-const ll MOD = 1000000007;
+const ll MOD = 2019;
 
 #include <iostream>
 using namespace std;
@@ -70,10 +70,22 @@ long long modinv(long long a, long long m) {
 }
 
 int main(){
-    int t; cin >> t;
-    while(t--){
-        ll n, s, k; cin >> n >> s >> k;
-        cout << (n-modinv(k, n)*s) << endl;
+    string s; cin >> s;
+    reverse(all(s));
+    vector<int> cnt(MOD, 0);
+    cnt[0] = 1;
+    int ans = 0;
+    int v = 0;
+    int d = 1;
+    rep(i,0,s.size()){
+        ll tmp = v + d * (s[i]-'0');
+        v = (v + d * (s[i]-'0')) % MOD;
+        d =  d*10 % MOD;
+        ans += cnt[v];
+        cnt[v]++;
+        // cerr << "num: " << tmp  << " ≡ " << v << endl;
     }
+    cout << ans << endl;
+
     return 0;
 }

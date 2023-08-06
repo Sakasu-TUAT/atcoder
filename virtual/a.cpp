@@ -40,7 +40,8 @@ void in(Head&& head, Tail&&... tail) {
 }
 const ll INF = 1LL << 60;
 const ll mod = 1000000007;
-
+ll dx[4] = {1, 0, 1, 1};
+ll dy[4] = {0, 1, 1, -1};
 
 bool IsPrime(int num)
 {
@@ -62,10 +63,55 @@ bool IsPrime(int num)
     return true;
 }
 
+
 int main(){
-    int x, y; cin >> x >> y;
-    if(x==y) cout << x << endl;
-    else cout << (3-x-y) << endl;
-    
+    ll n, s, t; cin >> n >> s >> t;
+    s--; t--;
+    vector<vector<ll>> G(n+1);
+    rep(i,0,n-1){
+        ll u, v; cin >> u >> v; 
+        u--; v--;
+        G[u].emplace_back(v);
+        G[v].emplace_back(u);
+    }
+
+    bool reached = false;
+
+    auto bfs = [&](int start, int target) -> auto {
+        vector<bool> visited(n+1, false);
+        queue<int> que;
+        que.push(start);
+        vector<int> prev(n, -1); 
+        while(!que.empty()){
+            int now = que.front();
+            que.pop();
+            visited[now] = true;
+            if(now == target){ break; }
+            for(const auto v : G[now]){
+                if(visited[v]) continue;
+                que.push(v);
+                prev[v] = now;
+            }
+        }
+        set<ll> st; 
+        int now = target;
+        while(now != -1) {
+            st.insert(now);
+            now = prev[now];
+        }
+        return st;
+    };
+
+    rep(j,0,n){
+       auto st1 = bfs(s, j);
+       auto st2 = bfs(t, j);
+       int cnt = 0;
+       for(const auto v : st1){
+            if(st2.count(v)) cnt++;
+       }
+       cout << cnt << endl;
+    }
+  
+   
     return 0;
 }

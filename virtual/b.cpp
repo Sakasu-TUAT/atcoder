@@ -63,14 +63,21 @@ bool IsPrime(int num)
 }
 
 int main(){
-    int n; cin >> n;
-    int ans = 0;
-    rep(i,0,n){
-        int a; cin >> a;
-        if(a>10) ans+=(a-10);
+    string s, t; cin >> s >> t;
+    int n = s.length();
+    ll ans = INF;
+    rep(i,0,n-t.length()+1){
+        int diff = 0;
+        rep(j,0,t.length()){
+            if(s[i+j] != t[j]){
+                diff++;
+            }
+        }
+        chmin(ans, diff);
     }
     cout << ans << endl;
-   
+
+
  
     return 0;
 }

@@ -78,22 +78,39 @@ vector<long long> enum_divisors(long long N) {
     return res;
 }
 
-
+using Graph = vector<vector<ll>>;
 int main(){
-    int n; cin >> n;
-    bitset<100001> bit(1);
-    int total = 0;
+    ll n; cin >> n;
+    map<ll, ll> color;
     rep(i,0,n){
-        int t;
-        cin >> t;
-        total += t;
-        bit |= (bit<<t);
+        ll c; cin >> c;
+        color[i] = c;
     }
-    ll ans = INF;
-    rep(i,0,total+1){
-        if(bit[i]) chmin(ans, max(total-i,i));
+    Graph G(n);
+    rep(i,0,n-1){
+        ll a, b; cin >> a >> b;
+        G[--a].emplace_back(--b);
+        G[b].emplace_back(a);
     }
-    cout << ans << '\n';
+
+    vector<ll> cnt(1e5+5);
+    vector<bool> used(n, false);
+    vector<ll> ans;
+    auto dfs = [&](auto dfs, ll now) -> void {
+        used[now] = true;
+        if(cnt[color[now]] == 0) ans.emplace_back(now+1);
+        cnt[color[now]]++;
+        for(const auto nv : G[now]){
+            if(!used[nv]) dfs(dfs, nv);
+        }
+        cnt[color[now]]--;
+    };
+    dfs(dfs, 0);
+    sort(all(ans));
+    for(const auto v : ans){
+        cout << v << endl;
+    }
+    
     
     return 0;
 }
