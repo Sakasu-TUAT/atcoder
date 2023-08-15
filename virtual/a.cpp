@@ -40,8 +40,8 @@ void in(Head&& head, Tail&&... tail) {
 }
 const ll INF = 1LL << 60;
 const ll mod = 1000000007;
-ll dx[4] = {1, 0, 1, 1};
-ll dy[4] = {0, 1, 1, -1};
+ll dx[4] = {1, 0, 0, -1};
+ll dy[4] = {0, 1, -1, 0};
 
 bool IsPrime(int num)
 {
@@ -65,53 +65,52 @@ bool IsPrime(int num)
 
 
 int main(){
-    ll n, s, t; cin >> n >> s >> t;
-    s--; t--;
-    vector<vector<ll>> G(n+1);
-    rep(i,0,n-1){
-        ll u, v; cin >> u >> v; 
-        u--; v--;
-        G[u].emplace_back(v);
-        G[v].emplace_back(u);
+    ll h, w; cin >> h >> w;
+    vector<string> s(h);
+    rep(i,0,h){
+        cin >> s[i];
+        // cerr << s[i] << endl;
     }
 
-    bool reached = false;
-
-    auto bfs = [&](int start, int target) -> auto {
-        vector<bool> visited(n+1, false);
-        queue<int> que;
-        que.push(start);
-        vector<int> prev(n, -1); 
-        while(!que.empty()){
-            int now = que.front();
-            que.pop();
-            visited[now] = true;
-            if(now == target){ break; }
-            for(const auto v : G[now]){
-                if(visited[v]) continue;
-                que.push(v);
-                prev[v] = now;
-            }
+    auto ok = [&](P nx) -> bool {
+        auto &[y, x] = nx;
+        if(x>=0 and x<w and y>=0 and y<h){
+            // cerr << nx.first << ": " << nx.second << endl;
+            // cerr << s[y][x] << endl;
+            if(s[y][x]=='.') return true;
+            else return false;
+        } else {
+            return false;
         }
-        set<ll> st; 
-        int now = target;
-        while(now != -1) {
-            st.insert(now);
-            now = prev[now];
-        }
-        return st;
     };
 
-    rep(j,0,n){
-       auto st1 = bfs(s, j);
-       auto st2 = bfs(t, j);
-       int cnt = 0;
-       for(const auto v : st1){
-            if(st2.count(v)) cnt++;
-       }
-       cout << cnt << endl;
+    queue<P> que;
+    que.push({0, 0});
+    map<P, ll> dist;
+    map<P, bool> visited;
+    // dist[P{0, 0}];
+    ll ans = 0;
+    while(!que.empty()){
+        P now = que.front();
+        // cerr << now.first << ", " << now.second << endl;
+        que.pop();
+        visited[now] = true;
+        rep(i,0,2){
+            P nx = {now.first + dy[i], now.second + dx[i]};
+                // cerr << nx.first << ": " << nx.second << endl;
+            if(ok(nx) and !visited[nx]){
+                chmax(dist[nx], dist[now]+1);
+                que.push(nx);
+                visited[nx] = true;
+            }
+        }
+    } 
+    for(const auto &[k, v] : dist){
+        // cerr << v << " ";
+        chmax(ans, v);
     }
-  
+    cout << ans+1 << endl;
+
    
     return 0;
 }

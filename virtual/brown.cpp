@@ -42,40 +42,19 @@ const ll INF = 1LL << 60;
 const ll mod = 1000000007;
 
 int main(){
-    int h, w, c, q;
-    cin >> h >> w >> c >> q;
-    vector<tuple<ll, ll, ll>> query;
-    rep(i,0,q){
-        int t, n, c;
-        cin >> t >> n >> c;
-        t--; n--; c--;
-        query.emplace_back(t, n, c);
-    }
-    vector<ll> ans(c);
-    vector<bool> row(h);
-    vector<bool> col(w);
-    reverse(query.begin(), query.end());
-
-    for (const auto &q : query){
-        auto [t, n, color] = q;
-        if(!t){
-            if(row[n]) continue;
-            ans[color] += w;
-            row[n] = true;
-            h--;
-        } else {
-            if(col[n]) continue;
-            ans[color] += h;
-            col[n] = true;
-            w--; 
+    ll n; cin >> n;
+    vector<vector<ll>> a(2*n);
+    rep(i,0,2*n-2){
+        rep(j,i,2*n-2){
+            int c; cin >> c;
+            a[i].emplace_back(c);
         }
     }
-    rep(i,0,c){
-        cout << ans[i] << "\n "[i<c-1];
+    rep(i,0,2*n){
+        rep(j,0,2*n){
+            
+        }
     }
-        
 
- 
-  
     return 0;
 }
