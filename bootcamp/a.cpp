@@ -35,6 +35,11 @@ using vll2 = vector<vll>;
 using vll3 = vector<vll2>;
 using vld2 = vector<vld>;
 using vld3 = vector<vld2>;
+using vs = vector<string>;
+using vc = vector<char>;
+using vvc = vector<char>;
+using vb = vector<bool>;
+using vvb = vector<vb>;
 
 int gcd(int a,int b){return b?gcd(b,a%b):a;}
 template <class T, class U>
@@ -50,8 +55,8 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 const ll INF = 1LL << 60;
-// const ll mod = 1000000007;
-const ll mod = 998244353;
+const ll mod = 1000000007;
+// const ll mod = 998244353;
 using Graph = vector<vector<ll>>;
 using namespace atcoder;
 using mint = modint998244353;
@@ -81,16 +86,6 @@ string decode(const vector<pair<char, int>>& code) {
     return ret;
 }
 
-//////////////// 以下を貼る ////////////////
-template<class T> size_t HashCombine(const size_t seed,const T &v){
-    return seed^(std::hash<T>()(v)+0x9e3779b9+(seed<<6)+(seed>>2));
-}
-/* pair用 */
-template<class T,class S> struct std::hash<std::pair<T,S>>{
-    size_t operator()(const std::pair<T,S> &keyval) const noexcept {
-        return HashCombine(std::hash<T>()(keyval.first), keyval.second);
-    }
-};
 
 
 // mod. m での a の逆元 a^{-1} を計算する
@@ -106,42 +101,55 @@ long long modinv(long long a, long long m) {
     return u;
 }
 
-int main() {
-    int n, m; cin >> n >> m;
-    vector<tuple<double, int, vector<double>>> vec(n);
-    map<int, double> zeroNum;
-    rep(i,0,n){
-        auto &[c, p, v] = vec[i];
-        cin >> c >> p;
-        // cerr << c << " " << p << " ";
-        rep(j,0,p){
-            int s; cin >> s;
-            if(s==0) zeroNum[i]++;
-            v.emplace_back(s);
+ll dx[4] = {1, 0, 0, -1};
+ll dy[4] = {0, 1, -1, 0};
+
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<ll> Eratosthenes(ll N) {
+    vector<ll> prime;
+    vector<bool> isprime(N, true);
+
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+        prime.emplace_back(p);
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
         }
     }
-    double ans = 1e5;
-    map<int, double> memo;
-    auto dp = [&](auto dp, int point) -> double {
-        if(point>=m) return 0;
-        if(memo[point]) return memo[point];
-        double res = INF;
-        rep(i,0,n){
-            double sum = 0;
-            auto [c, p, v] = vec[i];
-            double cnt = 0;
-            for(const auto &s : v) {
-                if(s==0) continue;
-                // cerr << "i: " << i << ", zeroNum: " << zeroNum[i] << endl;
-                sum += (dp(dp, point+s));
-            }
-            sum = (sum + c*p)/(p-zeroNum[i]);
-            chmin(res, sum);
-        } 
-        // cerr << res << endl;
-        return memo[point] = res;
-    };
-    cout << fixed << setprecision(10) << dp(dp, 0) << endl;
+    return prime;
 }
 
+// using mint = atcoder::modint998244353;
+
+const int MAX = 510000;
+mint fac[MAX], finv[MAX], inv[MAX];
+
+// テーブルを作る前処理
+void COMinit() {
+    const int MOD = mint::mod();
+    fac[0] = fac[1] = 1;
+    finv[0] = finv[1] = 1;
+    inv[1] = 1;
+    for (int i = 2; i < MAX; i++){
+        fac[i] = fac[i - 1] * i;
+        inv[i] = MOD - inv[MOD%i] * (MOD / i);
+        finv[i] = finv[i - 1] * inv[i];
+    }
+}
+// 二項係数計算
+mint COM(int n, int k){
+    if (n < k) return 0;
+    if (n < 0 || k < 0) return 0;
+    return fac[n] * finv[k] * finv[n - k];
+}
+
+int main() {
+    ll n; cin >> n; 
+    string s; cin >> s;
+
+    return 0;
+}
 
