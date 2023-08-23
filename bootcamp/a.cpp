@@ -63,11 +63,11 @@ using mint = modint998244353;
 
 /* encode: ランレングス圧縮を行う
 */
-vector<pair<char, int>> encode(const string& str) {
-    int n = (int)str.size();
-    vector<pair<char, int>> ret;
-    for (int l = 0; l < n;) {
-        int r = l + 1;
+vector<pair<char, ll>> encode(const string& str) {
+    ll n = (ll)str.size();
+    vector<pair<char, ll>> ret;
+    for (ll l = 0; l < n;) {
+        ll r = l + 1;
         for (; r < n && str[l] == str[r]; r++) {};
         ret.push_back({str[l], r - l});
         l = r;
@@ -76,10 +76,10 @@ vector<pair<char, int>> encode(const string& str) {
 }
 /* decode: ランレングス圧縮の復元を行う
 */
-string decode(const vector<pair<char, int>>& code) {
+string decode(const vector<pair<char, ll>>& code) {
     string ret = "";
     for (auto p : code) {
-        for (int i = 0; i < p.second; i++) {
+        for (ll i = 0; i < p.second; i++) {
             ret.push_back(p.first);
         }
     }
@@ -100,9 +100,6 @@ long long modinv(long long a, long long m) {
     if (u < 0) u += m;
     return u;
 }
-
-ll dx[4] = {1, 0, 0, -1};
-ll dy[4] = {0, 1, -1, 0};
 
 // 1 以上 N 以下の整数が素数かどうかを返す
 vector<ll> Eratosthenes(ll N) {
@@ -146,10 +143,40 @@ mint COM(int n, int k){
     return fac[n] * finv[k] * finv[n - k];
 }
 
-int main() {
-    ll n; cin >> n; 
-    string s; cin >> s;
+ll dx[4] = {-1, 0, 0, 1};
+ll dy[4] = {0, 1, -1, 0};
 
-    return 0;
+int main(){
+    ll h, w; cin >> h >> w;
+    ll q; cin >> q;
+    dsu d(h*w+10);
+    vector<vector<bool>> red(h, vb(w));
+    rep(i,0,q){
+        int x; cin >> x;
+        if(x==1){
+            int r, c; cin >> r >> c;
+            --r, --c;
+            red[r][c] = true;
+            rep(j,0,4){
+                int ny = r + dy[j];
+                int nx = c + dx[j];
+                if(ny<0 or ny>=h or nx<0 or nx>=w or !red[ny][nx]) continue;
+                if(red[ny][nx]){
+                    // cerr << r << ", " << c << " -> " << r*w+c << endl;
+                    d.merge(r*w+c, ny*w+nx);
+                }
+            }
+        } else {
+            int ra, ca, rb, cb; 
+            in(ra, ca, rb, cb);
+            ra--, ca--, rb--, cb--;
+            if(d.same(ra*w+ca, rb*w+cb) and red[ra][ca] and red[rb][cb]){
+                cout << "Yes" << endl;
+            } else {
+                cout << "No" << endl;
+            }
+        }
+    }
+    // printMatrix(red);
 }
 
