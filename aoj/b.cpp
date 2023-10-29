@@ -16,8 +16,6 @@
 #include <cinttypes>
 #include <algorithm>
 #include <cstdlib>
-#include <ranges>
-#include <numeric>
 #include <atcoder/all>
 
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
@@ -29,16 +27,17 @@ using namespace std;
 using ull = unsigned long long;
 using ll = long long;
 using P = pair<ll, ll>;
+using vll = vector<ll>;
 using vi = vector<int>;
-using vvi = vector<vi>;
 using vd = vector<double>;
 using vld = vector<long double>;
-using vl = vector<ll>;
-using vvl = vector<vl>;
-using vvvl = vector<vvl>;
+using vll2 = vector<vll>;
+using vll3 = vector<vll2>;
+using vld2 = vector<vld>;
+using vld3 = vector<vld2>;
 using vs = vector<string>;
 using vc = vector<char>;
-using vvc = vector<vc>;
+using vvc = vector<char>;
 using vb = vector<bool>;
 using vvb = vector<vb>;
 
@@ -56,37 +55,73 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 const ll INF = 1LL << 60;
-// const ll mod = 1000000007;
-const ll mod = 998244353;
-using namespace atcoder;
-// using mint = modint1000000007;
-using mint = modint998244353;
-// using Graph = vector<vector<ll>>;
-// struct Edge {ll to; ll cost;};
+const ll mod = 1000000007;
+// const ll mod = 998244353;
 using Graph = vector<vector<ll>>;
+using namespace atcoder;
+using mint = modint998244353;
 
-vl dijkstra(cauto G, ll start){
-    vl cost(G.size(), INF);
-    priority_queue<P, vector<P>, greater<P>> pq; //cost, nvがcostで昇順
-    pq.emplace(cost[start] = 0, start);
-    while(!pq.empty()){
-        auto [curCost, cv]  = pq.top(); pq.pop();
-        if(curCost > cost[cv]) continue;
-        for(cauto [nv, nxCost] : G[cv]){
-            if(chmin(cost[nv], cost[cv]+nxCost)){
-                pq.emplace(cost[nv], nv);
-            }
+/* encode: ランレングス圧縮を行う
+*/
+vector<pair<char, int>> encode(const string& str) {
+    int n = (int)str.size();
+    vector<pair<char, int>> ret;
+    for (int l = 0; l < n;) {
+        int r = l + 1;
+        for (; r < n && str[l] == str[r]; r++) {};
+        ret.push_back({str[l], r - l});
+        l = r;
+    }
+    return ret;
+}
+/* decode: ランレングス圧縮の復元を行う
+*/
+string decode(const vector<pair<char, int>>& code) {
+    string ret = "";
+    for (auto p : code) {
+        for (int i = 0; i < p.second; i++) {
+            ret.push_back(p.first);
         }
     }
-    return cost;
+    return ret;
 }
 
-const ll dx[4] = {0, 1, 0, -1};
-const ll dy[4] = {1, 0, -1, 0};
+
+
+// mod. m での a の逆元 a^{-1} を計算する
+long long modinv(long long a, long long m) {
+    long long b = m, u = 1, v = 0;
+    while (b) {
+        long long t = a / b;
+        a -= t * b; swap(a, b);
+        u -= t * v; swap(u, v);
+    }
+    u %= m;
+    if (u < 0) u += m;
+    return u;
+}
+
+ll dx[4] = {1, 0, 0, -1};
+ll dy[4] = {0, 1, -1, 0};
 
 int main() {
+    ll n; cin >> n;
+    map<ll, ll> cnt,lastPos, mp;
+    ll ans = 0;
+    rep(i,0,n) {
+        ll a; cin >> a;
+        if(cnt[a] > 0){
+            ll r = i;
+            ll l = lastPos[a];
+            mp[a] += (r - l - 1)*cnt[a]; 
+            ans += mp[a]; 
+        }
+        cnt[a]++;      
+        lastPos[a] = i;
+    }
+    cout << ans << endl;
 
+    return 0;
 }
-
 
 
