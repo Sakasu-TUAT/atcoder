@@ -62,8 +62,8 @@ using namespace atcoder;
 // using mint = modint1000000007;
 using mint = modint998244353;
 // using Graph = vector<vector<ll>>;
-// struct Edge {ll to; ll cost;};
-using Graph = vector<vector<ll>>;
+struct Edge {ll to; ll cost;};
+using Graph = vector<vector<Edge>>;
 
 vl dijkstra(cauto G, ll start){
     vl cost(G.size(), INF);
@@ -85,8 +85,4 @@ const ll dx[4] = {0, 1, 0, -1};
 const ll dy[4] = {1, 0, -1, 0};
 
 int main() {
-
 }
-
-
-

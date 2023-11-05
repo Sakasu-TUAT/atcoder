@@ -86,6 +86,7 @@
         "thread": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "all": "cpp"
+        "all": "cpp",
+        "stack": "cpp"
     }
 }
