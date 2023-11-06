@@ -14,17 +14,37 @@
 #include <bitset>
 #include <cassert>
 #include <cinttypes>
+#include <algorithm>
+#include <cstdlib>
+#include <ranges>
+#include <numeric>
+#include <atcoder/all>
 
-#define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
+#define OVERLOAD_REP(_1, _2, _3, name, ...) name
+#define REP1(i, n) for (auto i = std::decay_t<decltype(n)>{}; (i) != (n); ++(i))
+#define REP2(i, l, r) for (auto i = (l); (i) != (r); ++(i))
+#define rep(...) OVERLOAD_REP(__VA_ARGS__, REP2, REP1)(__VA_ARGS__)
+
 #define rrep(i,a,b) for (ll i = (a); i >= ll(b); i--)
 #define cauto const auto&
 #define all(x) (x).begin(),(x).end()
 #define rall(x) (x).rbegin(), (x).rend()
-
 using namespace std;
 using ull = unsigned long long;
 using ll = long long;
 using P = pair<ll, ll>;
+using vi = vector<int>;
+using vvi = vector<vi>;
+using vd = vector<double>;
+using vld = vector<long double>;
+using vl = vector<ll>;
+using vvl = vector<vl>;
+using vvvl = vector<vvl>;
+using vs = vector<string>;
+using vc = vector<char>;
+using vvc = vector<vc>;
+using vb = vector<bool>;
+using vvb = vector<vb>;
 
 int gcd(int a,int b){return b?gcd(b,a%b):a;}
 template <class T, class U>
@@ -40,125 +60,150 @@ void in(Head&& head, Tail&&... tail) {
     in(std::forward<Tail>(tail)...);
 }
 const ll INF = 1LL << 60;
-const ll mod = 1000000007;
-using Graph = vector<vector<ll>>;
+const ll mod = 998244353;
+using namespace atcoder;
+using mint = modint998244353;
+struct Edge {ll to; ll cost;};
+using Graph = vector<vector<Edge>>;
+const ll dx[4] = {0, 1, 0, -1};
+const ll dy[4] = {1, 0, -1, 0};
 
 
-/* encode: ランレングス圧縮を行う
-*/
-vector<pair<char, int>> encode(const string& str) {
-    int n = (int)str.size();
-    vector<pair<char, int>> ret;
-    for (int l = 0; l < n;) {
-        int r = l + 1;
-        for (; r < n && str[l] == str[r]; r++) {};
-        ret.push_back({str[l], r - l});
-        l = r;
-    }
-    return ret;
+int RandInt(int L,int R){
+    return rand()%(R-L+1)+L;
 }
-/* decode: ランレングス圧縮の復元を行う
-*/
-string decode(const vector<pair<char, int>>& code) {
-    string ret = "";
-    for (auto p : code) {
-        for (int i = 0; i < p.second; i++) {
-            ret.push_back(p.first);
-        }
-    }
-    return ret;
+int n, m;
+vector<vector<ll>>b;
+vb taken;
+ll score;
+
+void input(){
+    cin>>n>>m;
+    b.resize(m);
+    rep(i,m) b[i].resize(n/m);
+    rep(i,m)rep(j,n/m)cin>>b[i][j];
 }
 
-struct Pos {
-    int y, x;
+//{箱のid, 高さ}
+P findMountIdx(ll v){
+    rep(i,m)rep(j,n/m){
+        if(b[i][j]==v) return {i, j};
+    }
+}
+ll calc_score(vector<P>out){
+    ll score=0;
+    for(auto [v, i] : out){
+        if(i==0) continue;
+        auto [idx, h] = findMountIdx(v);
+        vl m = vl(b[idx].begin()+h, b[idx].end());
+        b[i].insert(b[i].end(), all(m)); 
+        score += (b[i].size() - h + 1);
+        b[idx].erase(b[idx].begin() + h, b[idx].end());
+    }
+    return score;
+}
+
+void calc_move(vl &from, vl &to, ll v){
+    int idx = 0;
+    rep(k,0,size(from)) if(from[k] == v) idx = k;
+    vl m = vl(from.begin() + idx, from.end());
+    to.insert(to.end(), all(m)); 
+    score += (from.size() - idx);
+    from.erase(from.begin() + idx, from.end());
 };
 
-struct Judge {
-    void set_temperature(const vector<vector<int>>& temperature) {
-        for (const vector<int>& row : temperature) {
-            for (int i = 0; i < row.size(); i++) {
-                cout << row[i] << (i == row.size() - 1 ? "\n" : " ");
+vector<P> operations;
+void calc_greedy(){
+    score = 0;
+    taken.resize(n+1);
+    ll lastRemoved = 0;
+    rep(v, 1, n+1) {
+        if(taken[v]) continue;
+        bool found = false;
+        rep(i,0,m){ //各山について調べる
+            auto h = b[i].size();
+            //山の一番上に箱vがある→取り出せる
+            if(h>0 and b[i][h-1] == v and v==lastRemoved+1) { 
+            // if(h>0 and b[i][h-1] == v ) { 
+                found = true;
+                taken[v] = true;
+                lastRemoved = v;
+                b[i].pop_back();
+                operations.emplace_back(v, 0);
+                break; //この箱については終わり
             }
         }
-        cout.flush();
-    }
-
-    int measure(int i, int y, int x) {
-        cout << i << " " << y << " " << x << endl; // endl does flush
-        int v;
-        cin >> v;
-        if (v == -1) {
-            cerr << "something went wrong. i=" << i << " y=" << y << " x=" << x << endl;
-            exit(1);
-        }
-        return v;
-    }
-
-    void answer(const vector<int>& estimate) {
-        cout << "-1 -1 -1" << endl;
-        for (int e : estimate) {
-            cout << e << endl;
-        }
-    }
-};
-
-struct Solver {
-    const int L;
-    const int N;
-    const int S;
-    const vector<Pos> landing_pos;
-    Judge judge;
-
-    Solver(int L, int N, int S, const vector<Pos>& landing_pos) : 
-        L(L), N(N), S(S), landing_pos(landing_pos), judge() {
-    }
-
-    void solve() {
-        const vector<vector<int>> temperature = create_temperature();
-        judge.set_temperature(temperature);
-        const vector<int> estimate = predict(temperature);
-        judge.answer(estimate);
-    }
-
-    vector<vector<int>> create_temperature() {
-        vector<vector<int>> temperature(L, vector<int>(L, 0));
-        // set the temperature to i * 10 for i-th position
-        for (int i = 0; i < N; i++) {
-            temperature[landing_pos[i].y][landing_pos[i].x] = i * 10;
-        }
-        return temperature;
-    }
-
-    vector<int> predict(const vector<vector<int>>& temperature) {
-        vector<int> estimate(N);
-        for (int i_in = 0; i_in < N; i_in++) {
-            // you can output comment
-            cout << "# measure i=" << i_in << " y=0 x=0" << endl;
-
-            int measured_value = judge.measure(i_in, 0, 0);
-            // answer the position with the temperature closest to the measured value
-            int min_diff = 9999;
-            for (int i_out = 0; i_out < N; i_out++) {
-                const Pos& pos = landing_pos[i_out];
-                int diff = abs(temperature[pos.y][pos.x] - measured_value);
-                if (diff < min_diff) {
-                    min_diff = diff;
-                    estimate[i_in] = i_out;
+        if(found) continue;
+        //一番上にない場合->移動させる箱を貪欲に決める
+        int best_v = -1; //移動させる箱
+        int best_i = -1; //移動させる箱の山のid
+        int best_k = n+1;//移動させる箱以上の数
+        rep(i,0,m){
+            ll h = size(b[i]); //移動前の山の高さ
+            rep(j,0,h){
+                int u = b[i][j];
+                if(taken[u]) continue;
+                int k = h - j; //移動前の箱以上に積まれている数    
+                if(u<best_v){
+                    best_v = u; // より優先して動かすべき小さい箱
+                    best_i = i; // 移動させる箱の属する山の番号を更新します。
+                    best_k = k; // 移動させる箱の上に積まれている箱の数を更新します。
                 }
             }
         }
-        return estimate;
+        if(best_v!=-1){ //移動させる箱が見つかっている場合
+            int best_j = -1; //移動先の山のid
+            int best_w = n+1; //移動先の山の一番上の箱の番号
+        
+            rep(j,0,m){ //全ての山を順に調べる
+                if(j==best_i) continue;
+                ll toH = size(b[j]); //移動先の山の高さ
+                if(toH == 0 or b[j][toH-1] > best_v) {//移動先の山が空 or 
+                    if(b[j][toH-1] < best_w){
+                        best_j = j;
+                        best_w = (toH == 0 ? n+1 : b[j][toH-1]);
+                    }
+                }
+            }
+           
+            if(best_j != -1) {
+                calc_move(b[best_i], b[best_j], best_v);
+                operations.emplace_back(best_v, best_j+1);
+                continue;                    
+            }
+        }
+
+        //操作1で動かせるものが無かった場合->ランダムで一つだけ箱を動かす
+        int i = 0;
+        int j = 0;
+        while(i!=v and (i==j or size(b[i]) == 0)){
+            i = RandInt(0, m-1);
+            j = RandInt(0, m-1);
+        }
+        int u = b[i][size(b[i])-1];
+        // if(u!=lastRemoved+1) continue;
+        calc_move(b[i], b[j], u);        
+        operations.emplace_back(u, j+1);
     }
-};
+}
+
+vector<int> solve(){
+    // int TIMELIMIT=1.9*CLOCKS_PER_SEC;
+    // int ti=clock();
+    // vector<P>out(D);
+    // rep(i,D)out[i]=RandInt(0,25);
+   
+    // return out;
+}
+void output(vector<P>out){
+    for(cauto [v,i] : out) cout << v << " " << i << endl;
+}
 
 int main() {
-    int L, N, S;
-    cin >> L >> N >> S;
-    vector<Pos> landing_pos(N);
-    for (int i = 0; i < N; i++) {
-        cin >> landing_pos[i].y >> landing_pos[i].x;
-    }
+    input();
+    calc_greedy();
+    // vi res = solve();
+    output(operations);
+    // cerr << "score: " << calc_score(res) << endl;
 
-    Solver solver(L, N, S, landing_pos);
-    solver.solve();
 }
