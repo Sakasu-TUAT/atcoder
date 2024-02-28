@@ -196,6 +196,7 @@ void output(vi out){
 int main() {
     input();
     vi res = solve();
+    
     // output(res);
     // cerr << "score: " << calc_score(res) << endl;
 }
