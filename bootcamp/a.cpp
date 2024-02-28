@@ -69,7 +69,7 @@ const ll INF = 1LL << 60;
 const ll mod = 998244353;
 using namespace atcoder;
 // using mint = modint1000000007;
-// using mint = modint998244353;
+using mint = modint998244353;
 using Graph = vector<vector<ll>>;
 // struct Edge {ll to;};
 // struct Edge {ll to; ll cost;};
@@ -91,8 +91,8 @@ vl dijkstra(cauto G, ll start){
     return cost;
 }
 
-const ll dx[4] = {0, 1, 0, -1};
-const ll dy[4] = {1, 0, -1, 0};
+// const ll dx[4] = {0, 1, 0, -1};
+// const ll dy[4] = {1, 0, -1, 0};
 // 1 以上 N 以下の整数が素数かどうかを返す
 vector<bool> Eratosthenes(ll N) {
     // テーブル
@@ -116,55 +116,40 @@ vector<bool> Eratosthenes(ll N) {
     return isprime;
 }
 
-int main() {
-   ll h, w; cin >> h >> w;
-   vvc a(h, vc(w)), b(h, vc(w));
-   rep(i,0,h) rep(j,0,w){ cin >> a[i][j];}
-   rep(i,0,h) rep(j,0,w){ cin >> b[i][j];}
-   auto tate = [&](vvc a) -> vvc {
-        vvc t(h, vc(w));
-        rep(i,0,h){
-            rep(j,0,w) t[i][j] = a[(i+1)%h][j];
-        }
-        return t;
-   };
-    
-   auto yoko = [&](vvc a) -> vvc {
-        vvc ta(w, vc(h));
-        vvc t(w, vc(h));
-        rep(i,0,h)rep(j,0,w){
-            ta[j][i] = a[i][j];
-        }
-        rep(i,0,w){
-            t[i] = ta[(i+1)%w];
-        }
-        vvc res(h, vc(w));
-        rep(i,0,h)rep(j,0,w){
-            res[i][j] = t[j][i];
-        }
-        // cerr << a[i] << endl;
-        return res;
-   };
+// 遅延セグメント木の準備
+using S = unsigned long;
+S op(S a, S) { return a; }
+S e() { return {}; }
+// 一次関数 a x + b によって恒等写像と代入を表現
+using F = std::pair<unsigned long, unsigned long>;
+S mapping(F a, S x) { return a.first * x + a.second; }
+F composition(F a, F b) { return {a.first * b.first, a.first * b.second + a.second}; }
+F id() { return {1, 0}; }
 
-   rep(i,0,h+1){
-    rep(j,0,w){
-        if(a==b){
-            cout << "Yes" << endl;
-            return 0;
+
+set<P> prime_factorize(long long N) {
+    set<P> res;
+    for (long long a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        long long ex = 0; // 指数
+
+        // 割れる限り割り続ける
+        while (N % a == 0) {
+            ++ex;
+            N /= a;
         }
-        a = yoko(a);
+
+        // その結果を push
+        res.insert({a, ex});
     }
-    if(a==b){
-        cout << "Yes" << endl;
-        return 0;
-    }
-    a = tate(a);
-    if(a==b){
-        cout << "Yes" << endl;
-        return 0;
-    }
-   }
-   cout << "No" << endl;
-  
+
+    // 最後に残った数について
+    if (N != 1) res.insert({N, 1});
+    return res;
+}
+
+int main() {
+
+
     return 0;
 }
