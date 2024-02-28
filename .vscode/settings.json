@@ -87,6 +87,12 @@
         "valarray": "cpp",
         "variant": "cpp",
         "all": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "climits": "cpp",
+        "internal_bit": "cpp",
+        "queue": "cpp",
+        "expected": "cpp",
+        "spanstream": "cpp",
+        "stacktrace": "cpp"
     }
 }

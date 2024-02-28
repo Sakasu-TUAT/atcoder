@@ -10,6 +10,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -55,15 +56,24 @@ void in(Head&& head, Tail&&... tail) {
     cin >> head;
     in(std::forward<Tail>(tail)...);
 }
+template <typename T>
+istream &operator>>(istream &is, vector<T> &v)
+{
+    for (int i = 0; i < v.size(); ++i)
+        is >> v[i];
+    return is;
+}
+
 const ll INF = 1LL << 60;
 // const ll mod = 1000000007;
 const ll mod = 998244353;
 using namespace atcoder;
 // using mint = modint1000000007;
-using mint = modint998244353;
-// using Graph = vector<vector<ll>>;
-struct Edge {ll to; ll cost;};
-using Graph = vector<vector<Edge>>;
+// using mint = modint998244353;
+using Graph = vector<vector<ll>>;
+// struct Edge {ll to;};
+// struct Edge {ll to; ll cost;};
+// using Graph = vector<vector<Edge>>;
 
 vl dijkstra(cauto G, ll start){
     vl cost(G.size(), INF);
@@ -83,7 +93,78 @@ vl dijkstra(cauto G, ll start){
 
 const ll dx[4] = {0, 1, 0, -1};
 const ll dy[4] = {1, 0, -1, 0};
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(ll N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
+
+    // 0, 1 は予めふるい落としておく
+    isprime[0] = isprime[1] = false;
+
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
+        }
+    }
+
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
+}
 
 int main() {
+   ll h, w; cin >> h >> w;
+   vvc a(h, vc(w)), b(h, vc(w));
+   rep(i,0,h) rep(j,0,w){ cin >> a[i][j];}
+   rep(i,0,h) rep(j,0,w){ cin >> b[i][j];}
+   auto tate = [&](vvc a) -> vvc {
+        vvc t(h, vc(w));
+        rep(i,0,h){
+            rep(j,0,w) t[i][j] = a[(i+1)%h][j];
+        }
+        return t;
+   };
+    
+   auto yoko = [&](vvc a) -> vvc {
+        vvc ta(w, vc(h));
+        vvc t(w, vc(h));
+        rep(i,0,h)rep(j,0,w){
+            ta[j][i] = a[i][j];
+        }
+        rep(i,0,w){
+            t[i] = ta[(i+1)%w];
+        }
+        vvc res(h, vc(w));
+        rep(i,0,h)rep(j,0,w){
+            res[i][j] = t[j][i];
+        }
+        // cerr << a[i] << endl;
+        return res;
+   };
 
+   rep(i,0,h+1){
+    rep(j,0,w){
+        if(a==b){
+            cout << "Yes" << endl;
+            return 0;
+        }
+        a = yoko(a);
+    }
+    if(a==b){
+        cout << "Yes" << endl;
+        return 0;
+    }
+    a = tate(a);
+    if(a==b){
+        cout << "Yes" << endl;
+        return 0;
+    }
+   }
+   cout << "No" << endl;
+  
+    return 0;
 }

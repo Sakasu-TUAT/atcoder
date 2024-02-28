@@ -10,12 +10,15 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
 #include <bitset>
 #include <cassert>
 #include <cinttypes>
 #include <algorithm>
 #include <cstdlib>
+#include <ranges>
+#include <numeric>
 #include <atcoder/all>
 
 #define rep(i,a,b) for (ll i = (a); i < ll(b); i++)
@@ -27,17 +30,16 @@ using namespace std;
 using ull = unsigned long long;
 using ll = long long;
 using P = pair<ll, ll>;
-using vll = vector<ll>;
 using vi = vector<int>;
+using vvi = vector<vi>;
 using vd = vector<double>;
 using vld = vector<long double>;
-using vll2 = vector<vll>;
-using vll3 = vector<vll2>;
-using vld2 = vector<vld>;
-using vld3 = vector<vld2>;
+using vl = vector<ll>;
+using vvl = vector<vl>;
+using vvvl = vector<vvl>;
 using vs = vector<string>;
 using vc = vector<char>;
-using vvc = vector<char>;
+using vvc = vector<vc>;
 using vb = vector<bool>;
 using vvb = vector<vb>;
 
@@ -54,74 +56,97 @@ void in(Head&& head, Tail&&... tail) {
     cin >> head;
     in(std::forward<Tail>(tail)...);
 }
-const ll INF = 1LL << 60;
-const ll mod = 1000000007;
-// const ll mod = 998244353;
-using Graph = vector<vector<ll>>;
-using namespace atcoder;
-using mint = modint998244353;
-
-/* encode: ランレングス圧縮を行う
-*/
-vector<pair<char, int>> encode(const string& str) {
-    int n = (int)str.size();
-    vector<pair<char, int>> ret;
-    for (int l = 0; l < n;) {
-        int r = l + 1;
-        for (; r < n && str[l] == str[r]; r++) {};
-        ret.push_back({str[l], r - l});
-        l = r;
-    }
-    return ret;
+template <typename T>
+istream &operator>>(istream &is, vector<T> &v)
+{
+    for (int i = 0; i < v.size(); ++i)
+        is >> v[i];
+    return is;
 }
-/* decode: ランレングス圧縮の復元を行う
-*/
-string decode(const vector<pair<char, int>>& code) {
-    string ret = "";
-    for (auto p : code) {
-        for (int i = 0; i < p.second; i++) {
-            ret.push_back(p.first);
+
+const ll INF = 1LL << 60;
+// const ll mod = 1000000007;
+const ll mod = 998244353;
+using namespace atcoder;
+// using mint = modint1000000007;
+// using mint = modint998244353;
+using Graph = vector<vector<ll>>;
+// struct Edge {ll to;};
+// struct Edge {ll to; ll cost;};
+// using Graph = vector<vector<Edge>>;
+
+vl dijkstra(cauto G, ll start){
+    vl cost(G.size(), INF);
+    priority_queue<P, vector<P>, greater<P>> pq; //cost, nvがcostで昇順
+    pq.emplace(cost[start] = 0, start);
+    while(!pq.empty()){
+        auto [curCost, cv]  = pq.top(); pq.pop();
+        if(curCost > cost[cv]) continue;
+        for(cauto [nv, nxCost] : G[cv]){
+            if(chmin(cost[nv], cost[cv]+nxCost)){
+                pq.emplace(cost[nv], nv);
+            }
         }
     }
-    return ret;
+    return cost;
 }
 
+const ll dx[4] = {0, 1, 0, -1};
+const ll dy[4] = {1, 0, -1, 0};
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(ll N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
 
+    // 0, 1 は予めふるい落としておく
+    isprime[0] = isprime[1] = false;
 
-// mod. m での a の逆元 a^{-1} を計算する
-long long modinv(long long a, long long m) {
-    long long b = m, u = 1, v = 0;
-    while (b) {
-        long long t = a / b;
-        a -= t * b; swap(a, b);
-        u -= t * v; swap(u, v);
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
+        }
     }
-    u %= m;
-    if (u < 0) u += m;
-    return u;
-}
 
-ll dx[4] = {1, 0, 0, -1};
-ll dy[4] = {0, 1, -1, 0};
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
+}
 
 int main() {
-    ll n; cin >> n;
-    map<ll, ll> cnt,lastPos, mp;
-    ll ans = 0;
-    rep(i,0,n) {
-        ll a; cin >> a;
-        if(cnt[a] > 0){
-            ll r = i;
-            ll l = lastPos[a];
-            mp[a] += (r - l - 1)*cnt[a]; 
-            ans += mp[a]; 
+  ll n, m, l; cin >> n >> m >> l;
+  vl a(n), b(m); 
+  cin >> a; 
+  cin >> b;
+  set<P> bad;
+  map<P, bool> mp;
+  rep(i,0,l){
+    ll c, d; cin >> c >> d;
+    bad.insert(P(--c, --d));
+    mp[P{c, d}] = true;
+  }
+  vl ord_a(n);
+  iota(all(ord_a), 0);
+  vl ord_b(m);
+  iota(all(ord_b), 0);
+
+  sort(all(ord_a), [&](ll i, ll j){ return a[i] > a[j];});
+  sort(all(ord_b), [&](ll i, ll j){ return b[i] > b[j];});
+
+  ll ans = 0;
+  
+  rep(j,0,n){
+    for(ll i=0; i<m; i++){
+        if(mp[P{j, ord_b[i]}]==0) {
+            chmax(ans, b[ord_b[i]]+a[j]);
+            break;
         }
-        cnt[a]++;      
-        lastPos[a] = i;
     }
-    cout << ans << endl;
+  }
+  cout << ans << endl;
 
-    return 0;
+  return 0;
 }
-
-
